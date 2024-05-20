@@ -5,12 +5,24 @@
 <?import javafx.scene.layout.VBox?>
 
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="src.ordersystem.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="src.ordersystem.HelloController">
+    <TextField fx:id="idField"
+               AnchorPane.leftAnchor="30.0"
+               AnchorPane.topAnchor="30.0">
+    </TextField>
+    <TextField fx:id="passwdField"
+               AnchorPane.leftAnchor="30.0"
+               AnchorPane.topAnchor="60.0">
+    </TextField>
+    <Button fx:id="loginButton" text="LOG IN"
+               AnchorPane.leftAnchor="50.0"
+               AnchorPane.topAnchor="100.0"
+               onAction="#handleLogin">
+    </Button>
+</AnchorPane>
