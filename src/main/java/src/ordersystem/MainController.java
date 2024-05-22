@@ -5,7 +5,7 @@ import javafx.scene.control.*;
 
 import java.sql.SQLException;
 
-public class HelloController {
+public class MainController {
     @FXML
     public TextField idField;
     @FXML
