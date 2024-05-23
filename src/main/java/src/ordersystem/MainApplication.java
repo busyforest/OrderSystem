@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("primaryStage-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("userMainStage-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         primaryStage.setTitle("Order System");
         primaryStage.setScene(scene);
