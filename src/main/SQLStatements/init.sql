@@ -8,14 +8,14 @@ create table if not exists User(
 create table if not exists message(
     id int,
     message varchar(50),
-    time varchar(50),
+    message_time varchar(50),
     foreign key (id) references User(id)
 );
 
 create table if not exists purchaser(
     id int,
     gender varchar(1),
-    student_id/work_id varchar(10),
+    studentIDOrWorkID int,
     foreign key (id) references User(id)
 );
 
@@ -41,24 +41,24 @@ create table if not exists interact_shop(
     foreign key (seller_id) references seller(id)
 );
 
-create table if not exists order(
+create table if not exists orderOverview(
     order_id int,
-    time varchar(20),
-    dish_status varchar(10)
-    primary key (order_id),
+    order_time varchar(20),
+    dish_status varchar(10),
+    primary key (order_id)
 );
 
 create table if not exists purchase_order(
     order_id int,
     user_id int,
-    foreign key (order_id) references order(order_id),
+    foreign key (order_id) references _order(order_id),
     foreign key (user_id) references User(id)
 );
 
 create table if not exists dish(
     dish_id int,
     name varchar(20),
-    price unsigned int,
+    price int,
     picture varchar(50),
     description varchar(50),
     ingredients varchar(50),
@@ -70,7 +70,7 @@ create table if not exists dish(
 create table if not exists order_dish(
     order_id int,
     dish_id int,
-    foreign key (order_id) references order(order_id),
+    foreign key (order_id) references _order(order_id),
     foreign key (dish_id) references dish(dish_id)
 );
 
