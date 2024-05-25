@@ -13,6 +13,10 @@ public class MainController {
     @FXML
     public Button loginButton;
     @FXML
+    public Button searchButton;
+    @FXML
+    public ScrollPane shopPane;
+    @FXML
     protected void handleLogin() {
         SQLLoader sqlLoader = new SQLLoader();
         boolean loginSuccess;
@@ -31,6 +35,10 @@ public class MainController {
             alert.setHeaderText("log in failed!");
             alert.showAndWait();
         }
+    }
+    @FXML
+    protected void handleSearch(){
+        shopPane.
     }
 
 }

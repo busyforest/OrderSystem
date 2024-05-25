@@ -15,7 +15,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.MainController">
    <children>
       <TextField layoutX="365.0" layoutY="79.0" prefHeight="42.0" prefWidth="342.0" />
-      <Button layoutX="738.0" layoutY="83.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="72.0" text="search">
+      <Button fx:id="searchButton" layoutX="738.0" layoutY="83.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="72.0" text="search" onAction="">
          <font>
             <Font size="15.0" />
          </font></Button>
@@ -57,7 +57,7 @@
             </Button>
          </children>
       </VBox>
-      <ScrollPane fitToWidth="true" layoutX="260.0" layoutY="205.0" prefHeight="452.0" prefWidth="644.0">
+      <ScrollPane fx:id="shopPane" fitToWidth="true" layoutX="260.0" layoutY="205.0" prefHeight="452.0" prefWidth="644.0">
          <content>
             <VBox prefHeight="592.0" prefWidth="771.0">
                <children>
