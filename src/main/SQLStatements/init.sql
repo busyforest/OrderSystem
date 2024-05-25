@@ -51,7 +51,7 @@ create table if not exists orderOverview(
 create table if not exists purchase_order(
     order_id int,
     user_id int,
-    foreign key (order_id) references _order(order_id),
+    foreign key (order_id) references orderOverview(order_id),
     foreign key (user_id) references User(id)
 );
 
