@@ -2,14 +2,17 @@ create table if not exists User(
     id int auto_increment,
     name varchar(20),
     passwd varchar(20),
+    avatar_path varchar(50),
     primary key (id)
 );
 
 create table if not exists message(
-    id int,
+    message_id int,
+    user_id int,
     message varchar(50),
     message_time varchar(50),
-    foreign key (id) references User(id)
+    primary key (message_id),
+    foreign key (user_id) references User(id)
 );
 
 create table if not exists purchaser(
@@ -55,13 +58,15 @@ create table if not exists orderOverview(
 create table if not exists purchase_order(
     order_id int,
     user_id int,
+    primary key (order_id),
     primary key (user_id),
-    foreign key (user_id) references User(id),
+    foreign key (user_id) references purchaser(id),
     foreign key (order_id) references orderOverview(order_id)
 );
 
 create table if not exists dish(
     dish_id int,
+    seller_id int,
     name varchar(20),
     price int,
     picture varchar(50),
@@ -69,24 +74,20 @@ create table if not exists dish(
     ingredients varchar(50),
     nutrition_information varchar(50),
     possible_allergens varchar(50),
-    primary key (dish_id)
+    primary key (dish_id),
+    foreign key (seller_id) references seller(id)
 );
 
 create table if not exists order_dish(
     order_id int,
     dish_id int,
     primary key (order_id),
+    primary key (dish_id),
     foreign key (order_id) references orderOverview(order_id),
     foreign key (dish_id) references dish(dish_id)
 );
 
-create table if not exists sell(
-    seller_id int,
-    dish_id int,
-    primary key (seller_id),
-    foreign key (seller_id) references seller(id),
-    foreign key (dish_id) references dish(dish_id)
-);
+
 
 create table if not exists interact_dish(
     purchaser_id int,
