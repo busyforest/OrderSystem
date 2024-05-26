@@ -40,6 +40,7 @@ create table if not exists interact_shop(
     seller_id int,
     comment varchar(60),
     isFavorite boolean,
+    primary key (purchaser_id, seller_id),
     foreign key (purchaser_id) references purchaser(id),
     foreign key (seller_id) references seller(id)
 );
@@ -54,8 +55,9 @@ create table if not exists orderOverview(
 create table if not exists purchase_order(
     order_id int,
     user_id int,
-    foreign key (order_id) references orderOverview(order_id),
-    foreign key (user_id) references User(id)
+    primary key (user_id),
+    foreign key (user_id) references User(id),
+    foreign key (order_id) references orderOverview(order_id)
 );
 
 create table if not exists dish(
@@ -73,6 +75,7 @@ create table if not exists dish(
 create table if not exists order_dish(
     order_id int,
     dish_id int,
+    primary key (order_id),
     foreign key (order_id) references orderOverview(order_id),
     foreign key (dish_id) references dish(dish_id)
 );
@@ -80,6 +83,7 @@ create table if not exists order_dish(
 create table if not exists sell(
     seller_id int,
     dish_id int,
+    primary key (seller_id),
     foreign key (seller_id) references seller(id),
     foreign key (dish_id) references dish(dish_id)
 );
@@ -89,6 +93,7 @@ create table if not exists interact_dish(
     dish_id int,
     comment varchar(60),
     isFavorite boolean,
+    primary key (purchaser_id, dish_id),
     foreign key (purchaser_id) references purchaser(id),
     foreign key (dish_id) references dish(dish_id)
 );
