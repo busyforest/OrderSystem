@@ -13,6 +13,12 @@ public class MainApplication extends Application {
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("loginStage-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        SQLLoader sqlLoader = new SQLLoader();
+        try {
+            sqlLoader.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         primaryStage.setTitle("Order System");
         primaryStage.setScene(scene);
         primaryStage.show();
