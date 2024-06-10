@@ -8,6 +8,7 @@ import src.ordersystem.entity.User;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class SQLLoader {
@@ -139,6 +140,50 @@ public class SQLLoader {
         }
         return null;
     }
+    public ArrayList<Seller> searchSeller(String name) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from seller where name like '%"+name+"%'");
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        ArrayList<Seller> sellers = new ArrayList<>();
+        while (resultSet.next()){
+            Seller seller = new Seller();
+            seller.setId(resultSet.getInt("id"));
+            seller.setAddress(resultSet.getString("address"));
+            seller.setBriefInfomation(resultSet.getString("brief_information"));
+            seller.setFeaturedDish(resultSet.getString("featured_dish"));
+            StringBuilder sb1 = new StringBuilder();
+            sb1.append("select name from user where id ="+seller.getId());
+            ResultSet resultSet1 = statement.executeQuery(sb1.toString());
+            if(resultSet1.next()){
+                seller.setName(resultSet1.getString("name"));
+            }
+            sellers.add(seller);
+        }
+        return sellers;
+        //System.out.println(sellers);
+    }
+
+    //管理员的功能
+    //管理商家
+    public void addSeller(Seller seller) throws SQLException {
+        statement.executeUpdate("insert into seller(id,address,brief_information,featured_dish) values("+seller.getId()+",'"+seller.getAddress()+"','"+seller.getBriefInfomation()+"','"+seller.getFeaturedDish()+"')");
+    }
+    public void deleteSeller(int id) throws SQLException {
+        statement.executeUpdate("delete from seller where id="+id);
+    }
+    //TODO:修改商家信息
+    //管理顾客
+    public void addPurchaser(Purchaser purchaser) throws SQLException {
+        statement.executeUpdate("insert into purchaser(id,gender,studentIDOrWorkID) values("+purchaser.getId()+",'"+purchaser.getGender()+"',"+purchaser.getStudentIDOrWorkID()+")");
+    }
+    public void deletePurchaser(int id) throws SQLException {
+        statement.executeUpdate("delete from purchaser where id="+id);
+    }
+    //TODO:修改顾客信息
+
+    //买家购买
+
+
 
 
 //    public static void main(String[] args) throws SQLException {
