@@ -38,7 +38,7 @@ create table if not exists administrator(
     primary key (id)
 );
 
-create table if not exists interact_shop(
+create table if not exists interact_seller(
     purchaser_id int,
     seller_id int,
     comment varchar(60),

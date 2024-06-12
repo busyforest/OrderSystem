@@ -1,9 +1,6 @@
 package src.ordersystem;
 import com.mysql.jdbc.Driver;
-import src.ordersystem.entity.Administrator;
-import src.ordersystem.entity.Purchaser;
-import src.ordersystem.entity.Seller;
-import src.ordersystem.entity.User;
+import src.ordersystem.entity.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -181,8 +178,75 @@ public class SQLLoader {
     }
     //TODO:修改顾客信息
 
-    //买家购买
-
+    //买家评论菜品
+    public void commentDish(int userId,int dishId,String comment) throws SQLException {
+        String checkIfExist = "select * from interacted_dish where purchaser_id="+userId+" and dish_id="+dishId;
+        ResultSet resultSet = statement.executeQuery(checkIfExist);
+        if(resultSet.next()){
+            statement.executeUpdate("update interacted_dish set comment='"+comment+"' where purchaser_id="+userId+" and dish_id="+dishId);
+        }else {
+            statement.executeUpdate("insert into interacted_dish(purchaser_id,dish_id,comment, isFavorite) values(" + userId + "," + dishId + ",'" + comment + "','false')");;
+        }
+    }
+    //买家收藏菜品
+    public void favoriteDish(int userId,int dishId) throws SQLException {
+        String checkIfExist = "select * from interacted_dish where purchaser_id="+userId+" and dish_id="+dishId;
+        ResultSet resultSet = statement.executeQuery(checkIfExist);
+        if(resultSet.next()){
+            statement.executeUpdate("update interacted_dish set isFavorite='true' where purchaser_id="+userId+" and dish_id="+dishId);
+        }else {
+            statement.executeUpdate("insert into interacted_dish(purchaser_id,dish_id,comment,isFavorite) values(" + userId + "," + dishId + ",'','true')");;
+        }
+    }
+    //买家收藏商家
+    public void favoriteSeller(int userId,int sellerId) throws SQLException {
+        String checkIfExist = "select * from interacted_seller where purchaser_id="+userId+" and seller_id="+sellerId;
+        ResultSet resultSet = statement.executeQuery(checkIfExist);
+        if(resultSet.next()){
+            statement.executeUpdate("update interacted_seller set isFavorite='true' where purchaser_id="+userId+" and seller_id="+sellerId);
+        }else {
+            statement.executeUpdate("insert into interacted_seller(purchaser_id,seller_id,comment,isFavorite) values(" + userId + "," + sellerId + ",'','true')");
+        }
+    }
+    //买家评论商家
+    public void commentSeller(int userId,int sellerId,String comment) throws SQLException {
+        String checkIfExist = "select * from interacted_seller where purchaser_id="+userId+" and seller_id="+sellerId;
+        ResultSet resultSet = statement.executeQuery(checkIfExist);
+        if(resultSet.next()){
+            statement.executeUpdate("update interacted_seller set comment='"+comment+"' where purchaser_id="+userId+" and seller_id="+sellerId);
+        }else {
+            statement.executeUpdate("insert into interacted_seller(purchaser_id,seller_id,comment,isFavorite) values(" + userId + "," + sellerId + ",'" + comment + "','false')");
+        }
+    }
+    //买家查看自己的收藏
+    public ArrayList<Integer> getFavoriteDish(int userId) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select dish_id from interacted_dish where purchaser_id="+userId+" and isFavorite='true'");
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        ArrayList<Integer> dishIds = new ArrayList<>();
+        while (resultSet.next()){
+            dishIds.add(resultSet.getInt("dish_id"));
+        }
+        return dishIds;
+    }
+    //买家查看消息
+//    public ArrayList<Message> getMessages(int userId) throws SQLException {
+//        StringBuilder sb = new StringBuilder();
+//        sb.append("select * from message where (sender_id="+userId+" or receiver_id="+userId+") and is_read='false'");
+//        ResultSet resultSet = statement.executeQuery(sb.toString());
+//        ArrayList<Message> messages = new ArrayList<>();
+//        while (resultSet.next()){
+//            Message message = new Message();
+//            message.setId(resultSet.getInt("id"));
+//            message.setSenderId(resultSet.getInt("sender_id"));
+//            message.setReceiverId(resultSet.getInt("receiver_id"));
+//            message.setContent(resultSet.getString("content"));
+//            message.setCreateTime(resultSet.getTimestamp("create_time"));
+//            message.setIsRead(resultSet.getString("is_read"));
+//            messages.add(message);
+//        }
+//        return messages;
+//    }
 
 
 
