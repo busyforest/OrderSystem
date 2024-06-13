@@ -27,13 +27,18 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
         statement = connect.createStatement();
+        init();
+        insert();
     }
     public  void init(){
         run("src/main/SQLStatements/init.sql");
+    }
+    public void insert() {
+        run("src/main/SQLStatements/insert.sql");
     }
     public void run(String sqlFilePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(sqlFilePath))) {
@@ -134,6 +139,7 @@ public class SQLLoader {
         }
         return null;
     }
+
 
 //    public static void main(String[] args) throws SQLException {
 //        SQLLoader sqlLoader = new SQLLoader();
