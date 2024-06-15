@@ -1,11 +1,13 @@
 package src.ordersystem.entity;
 import lombok.Data;
 
+import java.sql.Timestamp;
+
 @Data
 public class Message {
     private int message_id;
-    private int user_id;
+    private int receiver_id;
     private int sender_id;
-    private String time;
+    private Timestamp time;
     private String message;
 }
