@@ -12,13 +12,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.PurChaserMainStageController">
    <children>
       <TextField layoutX="365.0" layoutY="79.0" prefHeight="42.0" prefWidth="342.0" />
+<<<<<<< HEAD:src/main/resources/src/ordersystem/userMainStage-view.fxml
       <Button fx:id="searchButton" layoutX="738.0" layoutY="83.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="72.0" text="search" onAction="">
+=======
+      <Button fx:id="searchButton" layoutX="738.0" layoutY="83.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="72.0" text="search" onAction="#handleSearch">
+>>>>>>> f4f6369037951cea0ab5c2001365159aad6b0d7d:src/main/resources/src/ordersystem/purchaserMainStage-view.fxml
          <font>
             <Font size="15.0" />
-         </font></Button>
+         </font>
+      </Button>
       <VBox prefHeight="600.0" prefWidth="260.0">
          <children>
             <AnchorPane prefHeight="225.0" prefWidth="264.0">
@@ -28,7 +33,7 @@
                         <Image url="@Images/test.jpg" />
                      </image>
                   </ImageView>
-                  <Label layoutX="119.0" layoutY="89.0" prefHeight="35.0" prefWidth="108.0" text="busyforest">
+                  <Label fx:id="nameLabel" layoutX="119.0" layoutY="89.0" prefHeight="35.0" prefWidth="108.0" text="busyforest">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -57,7 +62,11 @@
             </Button>
          </children>
       </VBox>
+<<<<<<< HEAD:src/main/resources/src/ordersystem/userMainStage-view.fxml
       <ScrollPane fx:id="shopPane" fitToWidth="true" layoutX="260.0" layoutY="205.0" prefHeight="452.0" prefWidth="644.0">
+=======
+      <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutX="260.0" layoutY="205.0" prefHeight="452.0" prefWidth="644.0">
+>>>>>>> f4f6369037951cea0ab5c2001365159aad6b0d7d:src/main/resources/src/ordersystem/purchaserMainStage-view.fxml
          <content>
             <VBox prefHeight="592.0" prefWidth="771.0">
                <children>
