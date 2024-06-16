@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.PurChaserHistoryStageController">
+   <children>
+      <Label layoutX="32.0" layoutY="30.0" prefHeight="37.0" prefWidth="143.0" text="历史订单：">
+         <font>
+            <Font size="26.0" />
+         </font>
+      </Label>
+      <Pagination layoutX="67.0" layoutY="75.0" prefHeight="297.0" prefWidth="467.0"  fx:id="pagination"/>
+   </children>
+</AnchorPane>

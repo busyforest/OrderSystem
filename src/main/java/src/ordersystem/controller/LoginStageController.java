@@ -49,7 +49,7 @@ public class LoginStageController {
         }
 
     }
-    public void enterPurchaserStage(User user) throws IOException {
+    public void enterPurchaserStage(User user) throws IOException, SQLException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("purchaserMainStage-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
