@@ -35,7 +35,7 @@ public class PurChaserMainStageController {
     private ArrayList<Seller> sellers;
     private ArrayList<Seller> resultSellers;
     private static final int ITEMS_PER_PAGE = 5;
-    private int totalItems = 100; // 假设总共有100个项目
+    private int totalItems = 30;
     public Purchaser purchaser;
     @FXML
     protected void handleSearch() throws SQLException {
@@ -86,6 +86,7 @@ public class PurChaserMainStageController {
         this.purchaser = (Purchaser) user;
         nameLabel.setText(user.getName());
         getAllSellers();
+
     }
     public void getAllSellers() throws SQLException {
         sellers = new ArrayList<>();
@@ -93,9 +94,6 @@ public class PurChaserMainStageController {
         sqlLoader.connect();
         sellers = sqlLoader.getAllSellers();
         totalItems = sellers.size();
-    }
-    @FXML
-    public void initialize() {
         int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
         pagination.setPageCount(pageCount);
         pagination.setPageFactory(this::createPage);
