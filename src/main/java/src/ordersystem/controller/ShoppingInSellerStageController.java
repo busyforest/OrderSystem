@@ -87,32 +87,40 @@ public class ShoppingInSellerStageController {
 
         Label label2 = new Label("菜品简介：" + dishes.get(index).getDishDescription());
         label2.setFont(new javafx.scene.text.Font(15));
+        ArrayList<Dish> dishesPurchased = new ArrayList<>();
 
         Button button = new Button("添加到购物车");
         button.setOnMouseClicked(event -> {
                 try {
-                    handleAddDish(dishes.get(index));
+                    handleAddDish();
+                    dishesPurchased.add(dishes.get(index));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 } catch (SQLException e) {
                     throw new RuntimeException(e);
                 }
             });
+
+        Button button2 = new Button("支付");
+        button2.setOnMouseClicked(event -> {
+                try {
+                    SQLLoader sqlLoader = new SQLLoader();
+                    sqlLoader.connect();
+                    sqlLoader.purchaseDishList(purchaser.getId(), dishesPurchased);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
         VBox vbox = new VBox();
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(new Label(),button);
+        vBox.getChildren().addAll(new Label(),button,button2);
         vbox.getChildren().addAll(label1, label2);
         hbox.getChildren().addAll(imageView, new Label(), vbox,new Label(),new Label(),new Label(),vBox);
         hbox.setSpacing(10);
 
         return hbox;
     }
-    private void handleAddDish(Dish dish) throws IOException, SQLException {
-       int purchaserID = purchaser.getId();
-       int dishID = dish.getDishId();
-       SQLLoader sqlLoader = new SQLLoader();
-       sqlLoader.connect();
-       sqlLoader.purchaseDish(purchaserID, dishID);
+    private void handleAddDish() throws IOException, SQLException {
         // 创建一个标签来显示文本
         Label label = new Label("添加成功！");
 

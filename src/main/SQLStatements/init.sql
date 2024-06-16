@@ -62,7 +62,7 @@ create table if not exists dish(
     seller_id int,
     name varchar(20),
     price int,
-    picture varchar(50),
+    picture varchar(150),
     description varchar(50),
     ingredients varchar(50),
     nutrition_information varchar(50),

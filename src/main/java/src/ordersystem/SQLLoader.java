@@ -25,7 +25,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -62,7 +62,8 @@ public class SQLLoader {
         }
     }
     public void insert() {
-        run("src/main/SQLStatements/insert.sql");
+        //run("src/main/SQLStatements/insert.sql");
+        //run("src/main/SQLStatements/insert_dish.sql");
     }
     public void run(String sqlFilePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(sqlFilePath))) {
@@ -75,7 +76,7 @@ public class SQLLoader {
                 if (line.trim().endsWith(";")) {
                     String sql = sb.toString();
                     // 执行 SQL 语句
-                    statement.executeUpdate(sql);
+                    statement.execute(sql);
                     // 清空 StringBuilder 以准备下一个 SQL 语句
                     sb.setLength(0);
                 }
@@ -274,9 +275,11 @@ public class SQLLoader {
     }
 
     //买家购买菜品
-    public void purchaseDish(int purchaserId, int dishId) throws SQLException {
+    public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes) throws SQLException {
         statement.executeUpdate("insert into orderOverview(purchaser_id, order_time, dish_status) values (" + purchaserId + ", now(), \"已支付\");");
-        statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + dishId + ", null, null);");
+        for(Dish dish : dishes){
+            statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + dish.getDishId() + ", null, null);");
+        }
     }
     //卖家更新菜品状态
     public void updateDishStatus(int orderId, String dishStatus) throws SQLException {
