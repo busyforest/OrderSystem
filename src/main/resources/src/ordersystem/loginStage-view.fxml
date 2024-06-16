@@ -14,12 +14,12 @@
             <Font name="Algerian" size="36.0" />
          </font>
       </Label>
-      <Label layoutX="117.0" layoutY="170.0" text="Username:">
+      <Label layoutX="155.0" layoutY="171.0" text="用户名：">
          <font>
             <Font size="23.0" />
          </font>
       </Label>
-      <Label layoutX="118.0" layoutY="247.0" text="Password:">
+      <Label layoutX="178.0" layoutY="240.0" text="密码：">
          <font>
             <Font size="23.0" />
          </font>
@@ -28,10 +28,15 @@
          <font>
             <Font size="23.0" />
          </font></TextField>
-      <Button fx:id="loginButton" layoutX="284.0" layoutY="340.0" mnemonicParsing="false" onAction="#handleLogin" text="LOG IN">
+      <Button fx:id="loginButton" layoutX="412.0" layoutY="337.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="49.0" prefWidth="110.0" text="登录">
          <font>
             <Font name="Comic Sans MS" size="23.0" />
          </font></Button>
       <PasswordField fx:id="passwdField" layoutX="247.0" layoutY="232.0" prefHeight="49.0" prefWidth="285.0" />
+      <Button fx:id="loginButton1" layoutX="178.0" layoutY="337.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="49.0" prefWidth="110.0" text="注册">
+         <font>
+            <Font name="Comic Sans MS" size="23.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.ShoppingInSellerStageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.ShoppingInSellerStageController">
    <children>
       <Label fx:id="exLabel" layoutX="53.0" layoutY="49.0" text="example">
          <font>
             <Font size="31.0" />
          </font>
       </Label>
-      <Pagination layoutX="51.0" layoutY="158.0" prefHeight="279.0" prefWidth="528.0" fx:id="pagination"/>
+      <Pagination fx:id="pagination" layoutX="39.0" layoutY="150.0" prefHeight="351.0" prefWidth="502.0" />
       <Label layoutX="53.0" layoutY="116.0" text="菜品列表">
          <font>
             <Font size="22.0" />
+         </font>
+      </Label>
+      <Button layoutX="623.0" layoutY="519.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="126.0" text="结算" fx:id="payButton" onAction="#handlePaying">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Button>
+      <Pagination fx:id="dishCartPagination" layoutX="565.0" layoutY="151.0" prefHeight="351.0" prefWidth="296.0" />
+      <Label layoutX="565.0" layoutY="119.0" text="购物车">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="161.0" layoutY="526.0" prefHeight="32.0" prefWidth="96.0" text="总价：      ￥">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="257.0" layoutY="529.0" prefHeight="23.0" prefWidth="66.0" text="0.0" fx:id="priceLabel">
+         <font>
+            <Font size="17.0" />
          </font>
       </Label>
    </children>
