@@ -357,6 +357,27 @@ public class SQLLoader {
         }
         return name;
     }
+    //在一个商家中搜索菜品
+    public ArrayList<Dish> searchDishes(String name, Seller seller) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from dish where name like '%"+name+"%'"+ " and seller_id = "+ seller.getId());
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        ArrayList<Dish> dishes = new ArrayList<>();
+        while(resultSet.next()){
+            Dish dish = new Dish();
+            dish.setDishId(resultSet.getInt("dish_id"));
+            dish.setSellerId(resultSet.getInt("seller_id"));
+            dish.setDishName(resultSet.getString("name"));
+            dish.setDishPrice(resultSet.getInt("price"));
+            dish.setDishPictureUrl(resultSet.getString("picture"));
+            dish.setDishDescription(resultSet.getString("description"));
+            dish.setIngredients(resultSet.getString("ingredients"));
+            dish.setNutritionInfo(resultSet.getString("nutrition_information"));
+            dish.setPossibleAllergens(resultSet.getString("possible_allergens"));
+            dishes.add(dish);
+        }
+        return dishes;
+    }
 
     public static void main(String[] args) throws SQLException {
         SQLLoader sqlLoader = new SQLLoader();

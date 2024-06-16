@@ -1,12 +1,15 @@
 package src.ordersystem.controller;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.Observable;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -37,8 +40,13 @@ public class ShoppingInSellerStageController {
     public Label priceLabel;
     @FXML
     public Button payButton;
+    @FXML
+    public Button searchButton;
+    @FXML
+    public TextField searchField;
     private ArrayList<Dish> dishes;
     private ArrayList<Dish> cartList;
+    private ArrayList<Dish> resultDishes;
     private static final int ITEMS_PER_PAGE = 3;
     private int totalItems = 30;
     private int totalCartItems = 0;
@@ -66,7 +74,7 @@ public class ShoppingInSellerStageController {
         int pageStart = pageIndex * ITEMS_PER_PAGE;
         int pageEnd = Math.min(pageStart + ITEMS_PER_PAGE, totalItems);
         for (int i = pageStart; i < pageEnd; i++) {
-            HBox hbox = createItemBox(i);
+            HBox hbox = createItemBox(i, dishes);
 //             添加点击事件处理程序
 //            int finalI = i;
 //            hbox.setOnMouseClicked(event -> {
@@ -84,7 +92,7 @@ public class ShoppingInSellerStageController {
         return box;
     }
 
-    private HBox createItemBox(int index) {
+    private HBox createItemBox(int index, ArrayList<Dish> dishes) {
         HBox hbox = new HBox();
         ImageView imageView = new ImageView(new Image(dishes.get(index).getDishPictureUrl()));
         imageView.setFitHeight(100);
@@ -186,5 +194,33 @@ public class ShoppingInSellerStageController {
         Stage stage = (Stage) payButton.getScene().getWindow();
         stage.close();
     }
+    @FXML
+    protected void handleSearch() throws SQLException {
+        pagination.setPageFactory(null);
+        pagination.setPageCount(0);
+        resultDishes = new ArrayList<>();
+        String name = searchField.getText();
+        SQLLoader sqlLoader = new SQLLoader();
+        sqlLoader.connect();
+        resultDishes = sqlLoader.searchDishes(name, this.seller);
+        totalItems = resultDishes.size();
+        int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+        pagination.setPageCount(pageCount);
+        pagination.setPageFactory(this::createSearchPage);
+
+    }
+    private VBox createSearchPage(int pageIndex) {
+        VBox box = new VBox(5);
+        int pageStart = pageIndex * ITEMS_PER_PAGE;
+        int pageEnd = Math.min(pageStart + ITEMS_PER_PAGE, totalItems);
+
+        for (int i = pageStart; i < pageEnd; i++) {
+            HBox hbox = createItemBox(i, resultDishes);
+            box.getChildren().add(hbox);
+        }
+
+        return box;
+    }
+
 
 }
