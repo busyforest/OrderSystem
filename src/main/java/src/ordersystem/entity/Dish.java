@@ -1,6 +1,9 @@
 package src.ordersystem.entity;
 
-public class dish {
+import lombok.Data;
+
+@Data
+public class Dish {
     private int dishId;
     private int sellerId;
     private String dishName;

@@ -22,7 +22,7 @@ public class MainController {
         boolean loginSuccess;
         try {
             sqlLoader.connect();
-            loginSuccess=sqlLoader.search(Integer.parseInt(idField.getText()),passwdField.getText());
+            loginSuccess=sqlLoader.login(Integer.parseInt(idField.getText()),passwdField.getText());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -35,10 +35,6 @@ public class MainController {
             alert.setHeaderText("log in failed!");
             alert.showAndWait();
         }
-    }
-    @FXML
-    protected void handleSearch(){
-        shopPane.
     }
 
 }
