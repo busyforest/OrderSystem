@@ -48,10 +48,9 @@ public class ShoppingInSellerStageController {
         VBox box = new VBox(5);
         int pageStart = pageIndex * ITEMS_PER_PAGE;
         int pageEnd = Math.min(pageStart + ITEMS_PER_PAGE, totalItems);
-
         for (int i = pageStart; i < pageEnd; i++) {
             HBox hbox = createItemBox(i);
-            // 添加点击事件处理程序
+//             添加点击事件处理程序
 //            int finalI = i;
 //            hbox.setOnMouseClicked(event -> {
 //                try {
@@ -70,7 +69,7 @@ public class ShoppingInSellerStageController {
 
     private HBox createItemBox(int index) {
         HBox hbox = new HBox();
-        ImageView imageView = new ImageView(new Image("D:\\IDEA\\OrderSystem\\src\\main\\resources\\src\\ordersystem\\Images\\test.jpg"));
+        ImageView imageView = new ImageView(new Image("https://ordersystem-images.oss-cn-shanghai.aliyuncs.com/nahida.jpg"));
         imageView.setFitHeight(105);
         imageView.setFitWidth(113);
         imageView.setPreserveRatio(true);

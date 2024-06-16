@@ -23,7 +23,7 @@
                     <children>
                         <ImageView fitHeight="73.0" fitWidth="72.0" layoutX="27.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
                             <image>
-                                <Image url="@Images/test.jpg" />
+                                <Image url="https://ordersystem-images.oss-cn-shanghai.aliyuncs.com/test.jpg" />
                             </image>
                         </ImageView>
                         <Label fx:id="nameLabel" layoutX="130.0" layoutY="90.0" prefHeight="35.0" prefWidth="108.0" text="busyforest">

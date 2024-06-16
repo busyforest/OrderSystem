@@ -2,11 +2,9 @@ package src.ordersystem.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -31,16 +29,60 @@ public class PurChaserMainStageController {
 
     @FXML
     private Pagination pagination;
+    @FXML
+    public TextField searchField;
     private ArrayList<Seller> sellers;
-
+    private ArrayList<Seller> resultSellers;
     private static final int ITEMS_PER_PAGE = 5;
     private int totalItems = 100; // 假设总共有100个项目
+    private User user;
     @FXML
-    protected void handleSearch(){
-        scrollPane.setContent(null);
+    protected void handleSearch() throws SQLException {
+        pagination.setPageFactory(null);
+        pagination.setPageCount(0);
+        resultSellers = new ArrayList<>();
+        String name = searchField.getText();
+        SQLLoader sqlLoader = new SQLLoader();
+        sqlLoader.connect();
+//        resultSellers = sqlLoader.searchSeller(name);
+        //TODO:等待SQLloader中的问题解决
+        resultSellers.add(sellers.get(2));
+        resultSellers.add(sellers.get(5));
+        resultSellers.add(sellers.get(9));
+        totalItems = resultSellers.size();
+        int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+        pagination.setPageCount(pageCount);
+        pagination.setPageFactory(this::createSearchPage);
+
     }
 
+    private VBox createSearchPage(int pageIndex) {
+        VBox box = new VBox(5);
+        int pageStart = pageIndex * ITEMS_PER_PAGE;
+        int pageEnd = Math.min(pageStart + ITEMS_PER_PAGE, totalItems);
+
+        for (int i = pageStart; i < pageEnd; i++) {
+            HBox hbox = createItemBox(i, resultSellers);
+            // 添加点击事件处理程序
+            int finalI = i;
+            hbox.setOnMouseClicked(event -> {
+                try {
+                    handleItemClick(resultSellers.get(finalI));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            box.getChildren().add(hbox);
+        }
+
+        return box;
+    }
+
+
     public void init(User user) throws SQLException {
+        this.user = user;
         nameLabel.setText(user.getName());
         getAllSellers();
     }
@@ -64,7 +106,7 @@ public class PurChaserMainStageController {
         int pageEnd = Math.min(pageStart + ITEMS_PER_PAGE, totalItems);
 
         for (int i = pageStart; i < pageEnd; i++) {
-            HBox hbox = createItemBox(i);
+            HBox hbox = createItemBox(i, sellers);
             // 添加点击事件处理程序
             int finalI = i;
             hbox.setOnMouseClicked(event -> {
@@ -82,9 +124,9 @@ public class PurChaserMainStageController {
         return box;
     }
 
-    private HBox createItemBox(int index) {
+    private HBox createItemBox(int index, ArrayList<Seller> sellers) {
         HBox hbox = new HBox();
-        ImageView imageView = new ImageView(new Image("D:\\IDEA\\OrderSystem\\src\\main\\resources\\src\\ordersystem\\Images\\test.jpg"));
+        ImageView imageView = new ImageView(new Image("https://ordersystem-images.oss-cn-shanghai.aliyuncs.com/test.jpg"));
         imageView.setFitHeight(105);
         imageView.setFitWidth(113);
         imageView.setPreserveRatio(true);

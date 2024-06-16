@@ -14,7 +14,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.PurChaserMainStageController">
    <children>
-      <TextField layoutX="365.0" layoutY="79.0" prefHeight="42.0" prefWidth="342.0" />
+      <TextField layoutX="365.0" layoutY="79.0" prefHeight="42.0" prefWidth="342.0" fx:id="searchField"/>
       <Button fx:id="searchButton" layoutX="738.0" layoutY="83.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="72.0" text="search" onAction="#handleSearch">
          <font>
             <Font size="15.0" />
@@ -26,7 +26,7 @@
                <children>
                   <ImageView fitHeight="73.0" fitWidth="72.0" layoutX="27.0" layoutY="71.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@Images/test.jpg" />
+                        <Image url="https://ordersystem-images.oss-cn-shanghai.aliyuncs.com/test.jpg" />
                      </image>
                   </ImageView>
                   <Label fx:id="nameLabel" layoutX="119.0" layoutY="89.0" prefHeight="35.0" prefWidth="108.0" text="busyforest">
@@ -58,11 +58,8 @@
             </Button>
          </children>
       </VBox>
-      <ScrollPane fx:id="scrollPane" fitToWidth="true" layoutX="260.0" layoutY="205.0" prefHeight="452.0" prefWidth="644.0">
-         <content>
-            <VBox fx:id="contentVBox" prefHeight="592.0" prefWidth="771.0" />
-         </content>
-      </ScrollPane>
+
+      <VBox fx:id="contentVBox" prefHeight="592.0" prefWidth="771.0" />
       <Pagination fx:id="pagination" layoutX="260.0" layoutY="150.0" prefHeight="50.0" prefWidth="644.0" />
    </children>
 </AnchorPane>
