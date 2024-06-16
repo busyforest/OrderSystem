@@ -244,6 +244,7 @@ public class SQLLoader {
             statement.executeUpdate("insert into interacted_seller(purchaser_id,seller_id,comment,isFavorite) values(" + userId + "," + sellerId + ",'" + comment + "','false')");
         }
     }
+
     //买家查看自己的收藏
     public ArrayList<Integer> getFavoriteDish(int userId) throws SQLException {
         String selectFavoriteDish = "select dish_id from interacted_dish where purchaser_id="+userId+" and isFavorite='true'";
@@ -254,6 +255,7 @@ public class SQLLoader {
         }
         return dishIds;
     }
+
     //买家或者商家查看消息
     public ArrayList<Message> getMessages(int userId) throws SQLException {
         StringBuilder sb = new StringBuilder();
@@ -270,10 +272,7 @@ public class SQLLoader {
         }
         return messages;
     }
-    //买家或者商家发送消息
-    public void sendMessage(int senderId,int receiverId,String message) throws SQLException {
-        statement.executeUpdate("insert into message(sender_id,receiver_id,message,time) values("+senderId+","+receiverId+",'"+message+"',now())");
-    }
+
     //买家购买菜品
     public void purchaseDish(int purchaserId, int dishId) throws SQLException {
         statement.executeUpdate("insert into orderOverview(purchaser_id, order_time, dish_status) values (" + purchaserId + ", now(), \"已支付\");");
