@@ -283,7 +283,7 @@ public class SQLLoader {
     public void updateDishStatus(int orderId, String dishStatus) throws SQLException {
         statement.executeUpdate("update orderOverview set dish_status='" + dishStatus + "' where order_id=" + orderId +";");
     }
-
+    //没搜索的时候显示所有卖家
     public ArrayList<Seller> getAllSellers() throws SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("select * from seller");
@@ -306,6 +306,7 @@ public class SQLLoader {
         }
         return sellers;
     }
+    //获得一个卖家的所有商品用于显示
     public ArrayList<Dish> getDishesInSeller(Seller seller) throws SQLException {
         StringBuilder sb = new StringBuilder();
         sb.append("select * from dish where seller_id = " + seller.getId());
@@ -325,6 +326,34 @@ public class SQLLoader {
             dishes.add(dish);
         }
         return dishes;
+    }
+    // 买家查看历史订单
+    public ArrayList<OrderOverview> getHistory(Purchaser purchaser) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<OrderOverview> orderList = new ArrayList<>();
+        sb.append("select * from orderoverview where purchaser_id ="+ purchaser.getId());
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        while(resultSet.next()){
+            OrderOverview orderOverview = new OrderOverview();
+            orderOverview.setOrderID(resultSet.getInt("order_id"));
+            orderOverview.setPurChaserID(resultSet.getInt("purchaser_id"));
+            orderOverview.setOrderTime(resultSet.getString("order_time"));
+            orderOverview.setDishStatus(resultSet.getString("dish_status"));
+            orderList.add(orderOverview);
+        }
+        return orderList;
+    }
+    //根据id获得名字
+    // TODO:如果表结构改了这里要相应调整
+    public String getName(int id) throws SQLException {
+        String name =null;
+        StringBuilder sb = new StringBuilder();
+        sb.append("select name from user where id =" + id);
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        if(resultSet.next()){
+            name = resultSet.getString("name");
+        }
+        return name;
     }
 
     public static void main(String[] args) throws SQLException {

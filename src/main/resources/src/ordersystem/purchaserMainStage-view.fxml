@@ -36,7 +36,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="History">
+            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="History" fx:id="historyButton" onAction="#handleHistoryClick">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
@@ -58,8 +58,6 @@
             </Button>
          </children>
       </VBox>
-
-      <VBox fx:id="contentVBox" prefHeight="592.0" prefWidth="771.0" />
       <Pagination fx:id="pagination" layoutX="260.0" layoutY="150.0" prefHeight="50.0" prefWidth="644.0" />
    </children>
 </AnchorPane>
