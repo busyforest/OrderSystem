@@ -76,16 +76,14 @@ public class ShoppingInSellerStageController {
         for (int i = pageStart; i < pageEnd; i++) {
             HBox hbox = createItemBox(i, dishes);
 //             添加点击事件处理程序
-//            int finalI = i;
-//            hbox.setOnMouseClicked(event -> {
-//                try {
-//                    handleItemClick(sellers.get(finalI));
-//                } catch (IOException e) {
-//                    throw new RuntimeException(e);
-//                } catch (SQLException e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
+            int finalI = i;
+            hbox.setOnMouseClicked(event -> {
+                try {
+                    handleDishClick(dishes.get(finalI));
+                } catch (IOException | SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            });
             box.getChildren().add(hbox);
         }
 
@@ -221,6 +219,16 @@ public class ShoppingInSellerStageController {
 
         return box;
     }
+    public void handleDishClick(Dish dish) throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("dishDetailInformationStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        DishDetailInformationStageController dishDetailInformationStageController = fxmlLoader.getController();
+        dishDetailInformationStageController.purchaser = purchaser;
+        dishDetailInformationStageController.init(dish);
+        stage.setScene(scene);
+        stage.show();
 
+    }
 
 }

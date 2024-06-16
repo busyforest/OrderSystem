@@ -9,13 +9,13 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.ShoppingInSellerStageController">
    <children>
-      <Label fx:id="exLabel" layoutX="53.0" layoutY="49.0" text="example">
+      <Label fx:id="exLabel" layoutX="53.0" layoutY="23.0" text="example">
          <font>
             <Font size="31.0" />
          </font>
       </Label>
       <Pagination fx:id="pagination" layoutX="39.0" layoutY="150.0" prefHeight="351.0" prefWidth="502.0" />
-      <Label layoutX="53.0" layoutY="116.0" text="菜品列表">
+      <Label layoutX="53.0" layoutY="87.0" text="菜品列表">
          <font>
             <Font size="22.0" />
          </font>
@@ -41,12 +41,12 @@
             <Font size="17.0" />
          </font>
       </Label>
-      <TextField layoutX="216.0" layoutY="116.0" prefHeight="32.0" prefWidth="182.0" promptText="搜索菜品..." fx:id="searchField">
+      <TextField fx:id="searchField" layoutX="215.0" layoutY="87.0" prefHeight="32.0" prefWidth="182.0" promptText="搜索菜品...">
          <font>
             <Font size="15.0" />
          </font>
       </TextField>
-      <Button layoutX="423.0" layoutY="116.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="54.0" text="搜索" fx:id="searchButton" onAction="#handleSearch">
+      <Button fx:id="searchButton" layoutX="423.0" layoutY="87.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="32.0" prefWidth="54.0" text="搜索">
          <font>
             <Font size="15.0" />
          </font>
