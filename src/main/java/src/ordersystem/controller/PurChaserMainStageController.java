@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import src.ordersystem.MainApplication;
 import src.ordersystem.SQLLoader;
+import src.ordersystem.entity.Purchaser;
 import src.ordersystem.entity.Seller;
 import src.ordersystem.entity.User;
 
@@ -35,7 +36,7 @@ public class PurChaserMainStageController {
     private ArrayList<Seller> resultSellers;
     private static final int ITEMS_PER_PAGE = 5;
     private int totalItems = 100; // 假设总共有100个项目
-    private User user;
+    public Purchaser purchaser;
     @FXML
     protected void handleSearch() throws SQLException {
         pagination.setPageFactory(null);
@@ -82,7 +83,7 @@ public class PurChaserMainStageController {
 
 
     public void init(User user) throws SQLException {
-        this.user = user;
+        this.purchaser = (Purchaser) user;
         nameLabel.setText(user.getName());
         getAllSellers();
     }
@@ -150,8 +151,8 @@ public class PurChaserMainStageController {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("shoppingInSellerStage-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         ShoppingInSellerStageController shoppingStageController = fxmlLoader.getController();
+        shoppingStageController.purchaser = this.purchaser;
         shoppingStageController.init(seller);
-
         stage.setScene(scene);
         stage.show();
     }
