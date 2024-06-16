@@ -25,7 +25,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -284,11 +284,54 @@ public class SQLLoader {
         statement.executeUpdate("update orderOverview set dish_status='" + dishStatus + "' where order_id=" + orderId +";");
     }
 
+    public ArrayList<Seller> getAllSellers() throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from seller");
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        ArrayList<Seller> sellers = new ArrayList<>();
+        while (resultSet.next()){
+            Seller seller = new Seller();
+            seller.setId(resultSet.getInt("id"));
+            seller.setAddress(resultSet.getString("address"));
+            seller.setBriefInfomation(resultSet.getString("brief_information"));
+            seller.setFeaturedDish(resultSet.getString("featured_dish"));
+            StringBuilder sb1 = new StringBuilder();
+            sb1.append("select name from user where id ="+seller.getId());
+            Statement statement1 = connect.createStatement();
+            ResultSet resultSet1 = statement1.executeQuery(sb1.toString());
+            if(resultSet1.next()){
+                seller.setName(resultSet1.getString("name"));
+            }
+            sellers.add(seller);
+        }
+        return sellers;
+    }
+    public ArrayList<Dish> getDishesInSeller(Seller seller) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        sb.append("select * from dish where seller_id = " + seller.getId());
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        ArrayList<Dish> dishes = new ArrayList<>();
+        while (resultSet.next()) {
+            Dish dish = new Dish();
+            dish.setDishId(resultSet.getInt("dish_id"));
+            dish.setSellerId(resultSet.getInt("seller_id"));
+            dish.setDishName(resultSet.getString("name"));
+            dish.setDishPrice(resultSet.getInt("price"));
+            dish.setDishPictureUrl(resultSet.getString("picture"));
+            dish.setDishDescription(resultSet.getString("description"));
+            dish.setIngredients(resultSet.getString("ingredients"));
+            dish.setNutritionInfo(resultSet.getString("nutrition_information"));
+            dish.setPossibleAllergens(resultSet.getString("possible_allergens"));
+            dishes.add(dish);
+        }
+        return dishes;
+    }
 
-
-//    public static void main(String[] args) throws SQLException {
-//        SQLLoader sqlLoader = new SQLLoader();
-//        sqlLoader.connect();
-//        sqlLoader.search(1234,"root");
-//    }
+    public static void main(String[] args) throws SQLException {
+        SQLLoader sqlLoader = new SQLLoader();
+        ArrayList<Seller> sellers = new ArrayList<>();
+        sqlLoader.connect();
+        sellers = sqlLoader.getAllSellers();
+        System.out.println(sqlLoader.getDishesInSeller(sellers.get(2)));
+    }
 }
