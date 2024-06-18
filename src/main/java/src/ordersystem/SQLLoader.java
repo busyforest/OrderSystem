@@ -25,13 +25,13 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
         statement = connect.createStatement();
-//        init();
-//        insert();
+        //init();
+        //insert();
     }
     public  void init(){
         run("src/main/SQLStatements/init.sql");
@@ -56,14 +56,20 @@ public class SQLLoader {
                     "BEGIN\n" +
                     "    UPDATE message set receiver_id = (select seller_id from dish where dish_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.sender_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n" +
                     "END;");
+            statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_AVG_MARK\n" +
+                    "AFTER UPDATE ON order_dish\n" +
+                    "FOR EACH ROW\n" +
+                    "BEGIN\n" +
+                    "    UPDATE seller set avg_mark = (select AVG(mark) from order_dish where seller_id = (select seller_id from dish where dish_id = NEW.dish_id);\n" +
+                    "END;");
         }
         catch (Exception e){
             e.printStackTrace();
         }
     }
     public void insert() {
-        //run("src/main/SQLStatements/insert.sql");
-        //run("src/main/SQLStatements/insert_dish.sql");
+        run("src/main/SQLStatements/insert.sql");
+        run("src/main/SQLStatements/insert_dish.sql");
     }
     public void run(String sqlFilePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(sqlFilePath))) {
@@ -133,6 +139,7 @@ public class SQLLoader {
             seller.setAddress(resultSet2.getString("address"));
             seller.setBriefInfomation(resultSet2.getString("brief_information"));
             seller.setFeaturedDish(resultSet2.getString("featured_dish"));
+            seller.setAvg_mark(resultSet2.getFloat("avg_mark"));
             StringBuilder sb1 = new StringBuilder();
             sb1.append("select name from user where id =");
             sb1.append(id);
@@ -206,21 +213,15 @@ public class SQLLoader {
     //TODO:修改顾客信息
 
     //买家评论菜品
-    public void commentDish(int userId,int dishId,String comment) throws SQLException {
-        String checkIfExist = "select * from interact_dish where purchaser_id="+userId+" and dish_id="+dishId;
-        ResultSet resultSet = statement.executeQuery(checkIfExist);
-        if(resultSet.next()){
-            statement.executeUpdate("update interact_dish set comment='"+comment+"' where purchaser_id="+userId+" and dish_id="+dishId);
-        }else {
-            statement.executeUpdate("insert into interact_dish(purchaser_id,dish_id,isFavorite) values(" + userId + "," + dishId + ",'" + comment + "','false')");
-        }
+    public void commentDish(int orderId,int dishId,String comment,int mark) throws SQLException {
+        statement.executeUpdate("update order_dish set mark="+mark+", comment='"+comment+"' where order_id="+orderId+" and dish_id="+dishId);
     }
     //买家收藏菜品
     public void favoriteDish(int userId,int dishId) throws SQLException {
         String checkIfExist = "select * from interact_dish where purchaser_id="+userId+" and dish_id="+dishId;
         ResultSet resultSet = statement.executeQuery(checkIfExist);
         if(resultSet.next()){
-            statement.executeUpdate("update interact_dish set isFavorite=true where purchaser_id="+userId+" and dish_id="+dishId);
+            statement.executeUpdate("update interact_dish set isFavorite=false where purchaser_id="+userId+" and dish_id="+dishId);
         }else {
             statement.executeUpdate("insert into interact_dish(purchaser_id,dish_id,isFavorite) values(" + userId + "," + dishId + ",true)");
         }
@@ -291,10 +292,6 @@ public class SQLLoader {
             statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + dish.getDishId() + ", null, null);");
         }
     }
-    //卖家更新菜品状态
-    public void updateDishStatus(int orderId, String dishStatus) throws SQLException {
-        statement.executeUpdate("update orderOverview set dish_status='" + dishStatus + "' where order_id=" + orderId +";");
-    }
     //没搜索的时候显示所有卖家
     public ArrayList<Seller> getAllSellers() throws SQLException {
         StringBuilder sb = new StringBuilder();
@@ -307,6 +304,7 @@ public class SQLLoader {
             seller.setAddress(resultSet.getString("address"));
             seller.setBriefInfomation(resultSet.getString("brief_information"));
             seller.setFeaturedDish(resultSet.getString("featured_dish"));
+            seller.setAvg_mark(resultSet.getFloat("avg_mark"));
             StringBuilder sb1 = new StringBuilder();
             sb1.append("select name from user where id ="+seller.getId());
             Statement statement1 = connect.createStatement();
@@ -387,6 +385,22 @@ public class SQLLoader {
             dishes.add(dish);
         }
         return dishes;
+    }
+    //商家添加菜品
+    public void addDish(int sellerId,String dishName,String dishDescription,double dishPrice,String dishPictureUrl,String ingredients,String nutritionInfo,String possibleAllergens) throws SQLException {
+        statement.executeUpdate("insert into dish (seller_id, name, description, price, picture, ingredients, nutrition_information, possible_allergens) values("+sellerId+",'"+dishName+"','"+dishDescription+"',"+dishPrice+",'"+dishPictureUrl+"','"+ingredients+"','"+nutritionInfo+"','"+possibleAllergens+"')");
+    }
+    //商家删除菜品
+    public void deleteDish(int dishId) throws SQLException {
+        statement.executeUpdate("delete from dish where dish_id="+dishId);
+    }
+    //商家修改菜品信息
+    public void updateDish(int dishId,String dishName,String dishDescription,double dishPrice,String dishPictureUrl,String ingredients,String nutritionInfo,String possibleAllergens) throws SQLException {
+        statement.executeUpdate("update dish set name='"+dishName+"',description='"+dishDescription+"',price="+dishPrice+",picture='"+dishPictureUrl+"',ingredients='"+ingredients+"',nutrition_information='"+nutritionInfo+"',possible_allergens='"+possibleAllergens+"' where dish_id="+dishId);
+    }
+    //商家更新菜品状态
+    public void updateDishStatus(int orderId, String dishStatus) throws SQLException {
+        statement.executeUpdate("update orderOverview set dish_status='" + dishStatus + "' where order_id=" + orderId +";");
     }
 
     public static void main(String[] args) throws SQLException {
