@@ -28,6 +28,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 
 public class ShoppingInSellerStageController {
     @FXML
@@ -177,6 +178,7 @@ public class ShoppingInSellerStageController {
     public void handlePaying() throws SQLException {
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
+        cartList = getSingle(cartList);
         sqlLoader.purchaseDishList(this.purchaser.getId(), cartList);
         // 提示信息
         Label label = new Label("支付成功！");
@@ -229,6 +231,17 @@ public class ShoppingInSellerStageController {
         stage.setScene(scene);
         stage.show();
 
+    }
+    public ArrayList getSingle(ArrayList list){
+        ArrayList newList = new ArrayList();     //创建新集合
+        Iterator it = list.iterator();        //根据传入的集合(旧集合)获取迭代器
+        while(it.hasNext()){          //遍历老集合
+            Object obj = it.next();       //记录每一个元素
+            if(!newList.contains(obj)){      //如果新集合中不包含旧集合中的元素
+                newList.add(obj);       //将元素添加
+            }
+        }
+        return newList;
     }
 
 }

@@ -7,4 +7,5 @@ public class Seller extends User{
     private String briefInfomation;
     private String address;
     private String featuredDish;
+    private float avg_mark;
 }

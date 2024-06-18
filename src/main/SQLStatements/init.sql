@@ -29,6 +29,7 @@ create table if not exists seller(
     brief_information varchar(50),
     address varchar(20),
     featured_dish varchar(20),
+    avg_mark float,
     foreign key (id) references User(id),
     primary key (id)
 );
@@ -58,7 +59,7 @@ create table if not exists orderOverview(
 
 
 create table if not exists dish(
-    dish_id int,
+    dish_id int auto_increment,
     seller_id int,
     name varchar(20),
     price int,
