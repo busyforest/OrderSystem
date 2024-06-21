@@ -1,5 +1,6 @@
 package src.ordersystem.controller;
 
+import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -10,8 +11,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import src.ordersystem.MainApplication;
 import src.ordersystem.SQLLoader;
 import src.ordersystem.entity.Dish;
@@ -61,17 +64,6 @@ public class SellerMainStageController {
 
         for (int i = pageStart; i < pageEnd; i++) {
             HBox hbox = createItemBox(i, resultDishes);
-            // 添加点击事件处理程序
-            int finalI = i;
-            hbox.setOnMouseClicked(event -> {
-                try {
-                    handleItemClick(resultDishes.get(finalI));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
             box.getChildren().add(hbox);
         }
 
@@ -102,17 +94,6 @@ public class SellerMainStageController {
 
         for (int i = pageStart; i < pageEnd; i++) {
             HBox hbox = createItemBox(i, dishes);
-            // 添加点击事件处理程序
-            int finalI = i;
-            hbox.setOnMouseClicked(event -> {
-                try {
-                    handleItemClick(dishes.get(finalI));
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                } catch (SQLException e) {
-                    throw new RuntimeException(e);
-                }
-            });
             box.getChildren().add(hbox);
         }
 
@@ -131,6 +112,31 @@ public class SellerMainStageController {
         Button changeButton = new Button("修改价格");
         Button deleteButton = new Button("删除菜品");
 
+        changeButton.setOnAction(e ->{
+            try {
+                handleChangeClick(dishes.get(index));
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        deleteButton.setOnAction(e->{
+            // 提示信息
+            Label label = new Label("删除成功！");
+            StackPane root = new StackPane();
+            root.getChildren().add(label);
+            Stage primaryStage = new Stage();
+            Scene scene = new Scene(root, 250, 150);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+            delay.setOnFinished(event -> primaryStage.close());
+            delay.play();
+            Stage stage = (Stage) deleteButton.getScene().getWindow();
+            stage.close();
+        });
+
         VBox vbox = new VBox();
         vbox.getChildren().addAll(label1);
         VBox vbox1 = new VBox();
@@ -142,14 +148,14 @@ public class SellerMainStageController {
 
         return hbox;
     }
-    private void handleItemClick(Dish dish) throws IOException, SQLException {
-//        Stage stage = new Stage();
-//        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("shoppingInSellerStage-view.fxml"));
-//        Scene scene = new Scene(fxmlLoader.load());
-//        ShoppingInSellerStageController shoppingStageController = fxmlLoader.getController();
-//        shoppingStageController.purchaser = this.purchaser;
-//        shoppingStageController.init(seller);
-//        stage.setScene(scene);
-//        stage.show();
+    private void handleChangeClick(Dish dish) throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("changeDishInformationStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        ChangeDishInformationStageController changeDishInformationStageController = fxmlLoader.getController();
+        changeDishInformationStageController.dish = dish;
+        changeDishInformationStageController.init();
+        stage.setScene(scene);
+        stage.show();
     }
 }

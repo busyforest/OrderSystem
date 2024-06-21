@@ -14,7 +14,7 @@
             <Font size="21.0" />
          </font>
       </Label>
-      <Label layoutX="128.0" layoutY="31.0" prefHeight="31.0" prefWidth="391.0" text="菜品名">
+      <Label layoutX="128.0" layoutY="31.0" prefHeight="31.0" prefWidth="391.0" text="菜品名" fx:id="dishName">
          <font>
             <Font size="21.0" />
          </font>
@@ -24,31 +24,31 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="121.0" layoutY="109.0" prefHeight="31.0" prefWidth="331.0" />
+      <TextField layoutX="121.0" layoutY="109.0" prefHeight="31.0" prefWidth="331.0" fx:id="descriptionField" focusTraversable="false"/>
       <Label layoutX="30.0" layoutY="301.0" prefHeight="31.0" prefWidth="111.0" text="价格：￥">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="121.0" layoutY="301.0" prefHeight="31.0" prefWidth="53.0" />
+      <TextField layoutX="121.0" layoutY="301.0" prefHeight="31.0" prefWidth="53.0" fx:id="priceField" focusTraversable="false"/>
       <Label layoutX="30.0" layoutY="169.0" prefHeight="31.0" prefWidth="111.0" text="成分：">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="121.0" layoutY="169.0" prefHeight="31.0" prefWidth="331.0" />
+      <TextField layoutX="121.0" layoutY="169.0" prefHeight="31.0" prefWidth="331.0" fx:id="ingredientField" focusTraversable="false"/>
       <Label layoutX="30.0" layoutY="230.0" prefHeight="31.0" prefWidth="111.0" text="过敏原：">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="121.0" layoutY="230.0" prefHeight="31.0" prefWidth="331.0" />
-      <Button layoutX="111.0" layoutY="365.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="74.0" text="取消">
+      <TextField layoutX="121.0" layoutY="230.0" prefHeight="31.0" prefWidth="331.0" fx:id="allergensField" focusTraversable="false"/>
+      <Button layoutX="111.0" layoutY="365.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="74.0" text="取消" fx:id="cancelButton" onAction="#handleCancelClick">
          <font>
             <Font size="15.0" />
          </font>
       </Button>
-      <Button layoutX="324.0" layoutY="365.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="74.0" text="确认">
+      <Button layoutX="324.0" layoutY="365.0" mnemonicParsing="false" prefHeight="31.0" prefWidth="74.0" text="确认" fx:id="confirmButton" onAction="#handleConfirmClick">
          <font>
             <Font size="15.0" />
          </font>
