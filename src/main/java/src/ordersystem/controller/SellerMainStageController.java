@@ -109,7 +109,7 @@ public class SellerMainStageController {
         Label label1 = new Label(dishes.get(index).getDishName());
         label1.setFont(new javafx.scene.text.Font(20));
 
-        Button changeButton = new Button("修改价格");
+        Button changeButton = new Button("修改信息");
         Button deleteButton = new Button("删除菜品");
 
         changeButton.setOnAction(e ->{
