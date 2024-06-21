@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
 
 public class SQLLoader {
@@ -56,11 +57,11 @@ public class SQLLoader {
                     "BEGIN\n" +
                     "    UPDATE message set receiver_id = (select seller_id from dish where dish_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.sender_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n" +
                     "END;");
-            statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_AVG_MARK\n" +
+            statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_DISH_AVG_MARK\n" +
                     "AFTER UPDATE ON order_dish\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
-                    "    UPDATE seller set avg_mark = (select AVG(mark) from order_dish where seller_id = (select seller_id from dish where dish_id = NEW.dish_id)) where seller_id = (select seller_id from dish where dish_id = NEW.dish_id);\n" +
+                    "    UPDATE dish set avg_mark = (select AVG(mark) from order_dish where dish_id = NEW.dish_id) where dish_id = NEW.dish_id;\n" +
                     "END;");
         }
         catch (Exception e){
@@ -287,11 +288,24 @@ public class SQLLoader {
 
     //买家购买菜品
     public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes) throws SQLException {
+        dishes = getSingle(dishes);
         statement.executeUpdate("insert into orderOverview(purchaser_id, order_time, dish_status) values (" + purchaserId + ", now(), \"已支付\");");
         for(Dish dish : dishes){
             statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + dish.getDishId() + ", null, null);");
         }
     }
+    public ArrayList getSingle(ArrayList list){
+        ArrayList newList = new ArrayList();     //创建新集合
+        Iterator it = list.iterator();        //根据传入的集合(旧集合)获取迭代器
+        while(it.hasNext()){          //遍历老集合
+            Object obj = it.next();       //记录每一个元素
+            if(!newList.contains(obj)){      //如果新集合中不包含旧集合中的元素
+                newList.add(obj);       //将元素添加
+            }
+        }
+        return newList;
+    }
+
     //没搜索的时候显示所有卖家
     public ArrayList<Seller> getAllSellers() throws SQLException {
         StringBuilder sb = new StringBuilder();

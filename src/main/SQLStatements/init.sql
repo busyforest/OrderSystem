@@ -1,6 +1,5 @@
 create table if not exists User(
     id int auto_increment,
-    name varchar(20),
     passwd varchar(20),
     avatar_path varchar(50),
     primary key (id)
@@ -18,6 +17,7 @@ create table if not exists message(
 
 create table if not exists purchaser(
     id int,
+    name varchar(20),
     gender varchar(1),
     studentIDOrWorkID int,
     foreign key (id) references User(id),
@@ -26,6 +26,7 @@ create table if not exists purchaser(
 
 create table if not exists seller(
     id int,
+    name varchar(20),
     brief_information varchar(50),
     address varchar(20),
     featured_dish varchar(20),
@@ -36,12 +37,13 @@ create table if not exists seller(
 
 create table if not exists administrator(
     id int,
+    name varchar(20),
     foreign key (id) references User(id),
     primary key (id)
 );
 
 create table if not exists interact_seller(
-    purchaser_id int,
+    purchaser_id int,ssss
     seller_id int,
     isFavorite boolean,
     primary key (purchaser_id, seller_id),
@@ -68,6 +70,7 @@ create table if not exists dish(
     ingredients varchar(50),
     nutrition_information varchar(50),
     possible_allergens varchar(50),
+    avg_mark int,
     primary key (dish_id),
     foreign key (seller_id) references seller(id)
 );
