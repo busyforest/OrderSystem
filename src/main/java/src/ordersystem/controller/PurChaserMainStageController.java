@@ -45,11 +45,7 @@ public class PurChaserMainStageController {
         String name = searchField.getText();
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
-//        resultSellers = sqlLoader.searchSeller(name);
-        //TODO:等待SQLloader中的问题解决
-        resultSellers.add(sellers.get(2));
-        resultSellers.add(sellers.get(5));
-        resultSellers.add(sellers.get(9));
+        resultSellers = sqlLoader.searchSeller(name);
         totalItems = resultSellers.size();
         int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
         pagination.setPageCount(pageCount);
