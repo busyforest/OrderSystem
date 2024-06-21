@@ -60,7 +60,7 @@ public class LoginStageController {
         stage.setScene(scene);
         stage.show();
     }
-    public void enterSellerStage(User user) throws IOException {
+    public void enterSellerStage(User user) throws IOException, SQLException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("sellerMainStage-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
