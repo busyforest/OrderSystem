@@ -30,8 +30,8 @@ public class SQLLoader {
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
         statement = connect.createStatement();
-        //init();
-        //insert();
+//        init();
+//        insert();
     }
     public  void init(){
         run("src/main/SQLStatements/init.sql");
@@ -60,7 +60,7 @@ public class SQLLoader {
                     "AFTER UPDATE ON order_dish\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
-                    "    UPDATE seller set avg_mark = (select AVG(mark) from order_dish where seller_id = (select seller_id from dish where dish_id = NEW.dish_id);\n" +
+                    "    UPDATE seller set avg_mark = (select AVG(mark) from order_dish where seller_id = (select seller_id from dish where dish_id = NEW.dish_id)) where seller_id = (select seller_id from dish where dish_id = NEW.dish_id);\n" +
                     "END;");
         }
         catch (Exception e){
@@ -402,6 +402,18 @@ public class SQLLoader {
     public void updateDishStatus(int orderId, String dishStatus) throws SQLException {
         statement.executeUpdate("update orderOverview set dish_status='" + dishStatus + "' where order_id=" + orderId +";");
     }
+    //查询某个商户某个菜品的收藏量，显示在菜品的具体信息里面
+    public int getFavoriteNum(int dishId) throws SQLException {
+        String selectFavoriteNum = "select count(*) from interact_dish where dish_id="+dishId+" and isFavorite='true'";
+        ResultSet resultSet = statement.executeQuery(selectFavoriteNum);
+        if(resultSet.next()){
+            return resultSet.getInt(1);
+        }else {
+            return 0;
+        }
+    }
+
+
 
     public static void main(String[] args) throws SQLException {
         SQLLoader sqlLoader = new SQLLoader();
