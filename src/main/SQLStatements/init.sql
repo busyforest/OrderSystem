@@ -43,7 +43,7 @@ create table if not exists administrator(
 );
 
 create table if not exists interact_seller(
-    purchaser_id int,ssss
+    purchaser_id int,
     seller_id int,
     isFavorite boolean,
     primary key (purchaser_id, seller_id),
@@ -64,13 +64,13 @@ create table if not exists dish(
     dish_id int auto_increment,
     seller_id int,
     name varchar(20),
-    price int,
+    price float,
     picture varchar(150),
     description varchar(50),
     ingredients varchar(50),
     nutrition_information varchar(50),
     possible_allergens varchar(50),
-    avg_mark int,
+    avg_mark float,
     primary key (dish_id),
     foreign key (seller_id) references seller(id)
 );

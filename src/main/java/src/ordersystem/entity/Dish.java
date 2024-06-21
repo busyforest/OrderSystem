@@ -13,4 +13,5 @@ public class Dish {
     private String ingredients;
     private String nutritionInfo;
     private String possibleAllergens;
+    private float avg_mark;
 }
