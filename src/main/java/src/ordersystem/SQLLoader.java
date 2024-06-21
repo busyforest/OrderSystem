@@ -26,13 +26,13 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
         statement = connect.createStatement();
-//        init();
-//        insert();
+        init();
+        insert();
     }
     public  void init(){
         run("src/main/SQLStatements/init.sql");
@@ -115,16 +115,9 @@ public class SQLLoader {
         if(resultSet.next()){
             Purchaser purchaser = new Purchaser();
             purchaser.setId(resultSet.getInt("id"));
+            purchaser.setName(resultSet.getString("name"));
             purchaser.setGender(resultSet.getString("gender").charAt(0));
             purchaser.setStudentIDOrWorkID(resultSet.getInt("studentIDOrWorkID"));
-            StringBuilder sb1 = new StringBuilder();
-            sb1.append("select name from user where id =");
-            sb1.append(id);
-            ResultSet resultSet1 = null;
-            resultSet1 = statement.executeQuery(sb1.toString());
-            if(resultSet1.next()){
-                purchaser.setName(resultSet1.getString("name"));
-            }
             return purchaser;
         }
 
@@ -137,18 +130,11 @@ public class SQLLoader {
         if(resultSet2.next()){
             Seller seller = new Seller();
             seller.setId(resultSet2.getInt("id"));
+            seller.setName(resultSet2.getString("name"));
             seller.setAddress(resultSet2.getString("address"));
             seller.setBriefInfomation(resultSet2.getString("brief_information"));
             seller.setFeaturedDish(resultSet2.getString("featured_dish"));
             seller.setAvg_mark(resultSet2.getFloat("avg_mark"));
-            StringBuilder sb1 = new StringBuilder();
-            sb1.append("select name from user where id =");
-            sb1.append(id);
-            ResultSet resultSet1 = null;
-            resultSet1 = statement.executeQuery(sb1.toString());
-            if(resultSet1.next()){
-                seller.setName(resultSet1.getString("name"));
-            }
             return seller;
         }
         //最后在管理员里面找
@@ -160,15 +146,7 @@ public class SQLLoader {
         if(resultSet3.next()){
             Administrator administrator = new Administrator();
             administrator.setId(resultSet3.getInt("id"));
-            StringBuilder sb1 = new StringBuilder();
-            sb1.append("select name from user where id =");
-            sb1.append(id);
-            ResultSet resultSet1 = null;
-            resultSet1 = statement.executeQuery(sb1.toString());
-            if(resultSet1.next()){
-                administrator.setName(resultSet1.getString("name"));
-            }
-            return administrator;
+            administrator.setName(resultSet3.getString("name"));
         }
         return null;
     }
@@ -180,15 +158,11 @@ public class SQLLoader {
         while (resultSet.next()){
             Seller seller = new Seller();
             seller.setId(resultSet.getInt("id"));
+            seller.setName(resultSet.getString("name"));
             seller.setAddress(resultSet.getString("address"));
             seller.setBriefInfomation(resultSet.getString("brief_information"));
             seller.setFeaturedDish(resultSet.getString("featured_dish"));
-            StringBuilder sb1 = new StringBuilder();
-            sb1.append("select name from user where id ="+seller.getId());
-            ResultSet resultSet1 = statement.executeQuery(sb1.toString());
-            if(resultSet1.next()){
-                seller.setName(resultSet1.getString("name"));
-            }
+            seller.setAvg_mark(resultSet.getFloat("avg_mark"));
             sellers.add(seller);
         }
         return sellers;
@@ -315,17 +289,11 @@ public class SQLLoader {
         while (resultSet.next()){
             Seller seller = new Seller();
             seller.setId(resultSet.getInt("id"));
+            seller.setName(resultSet.getString("name"));
             seller.setAddress(resultSet.getString("address"));
             seller.setBriefInfomation(resultSet.getString("brief_information"));
             seller.setFeaturedDish(resultSet.getString("featured_dish"));
             seller.setAvg_mark(resultSet.getFloat("avg_mark"));
-            StringBuilder sb1 = new StringBuilder();
-            sb1.append("select name from user where id ="+seller.getId());
-            Statement statement1 = connect.createStatement();
-            ResultSet resultSet1 = statement1.executeQuery(sb1.toString());
-            if(resultSet1.next()){
-                seller.setName(resultSet1.getString("name"));
-            }
             sellers.add(seller);
         }
         return sellers;
@@ -347,6 +315,7 @@ public class SQLLoader {
             dish.setIngredients(resultSet.getString("ingredients"));
             dish.setNutritionInfo(resultSet.getString("nutrition_information"));
             dish.setPossibleAllergens(resultSet.getString("possible_allergens"));
+            dish.setAvg_mark(resultSet.getFloat("avg_mark"));
             dishes.add(dish);
         }
         return dishes;
@@ -396,6 +365,7 @@ public class SQLLoader {
             dish.setIngredients(resultSet.getString("ingredients"));
             dish.setNutritionInfo(resultSet.getString("nutrition_information"));
             dish.setPossibleAllergens(resultSet.getString("possible_allergens"));
+            dish.setAvg_mark(resultSet.getFloat("avg_mark"));
             dishes.add(dish);
         }
         return dishes;
