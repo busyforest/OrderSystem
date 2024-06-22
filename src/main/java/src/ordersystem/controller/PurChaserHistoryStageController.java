@@ -3,6 +3,7 @@ package src.ordersystem.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.Image;
@@ -81,11 +82,31 @@ public class PurChaserHistoryStageController {
         VBox vbox = new VBox();
         vbox.getChildren().addAll(label1, label2,label,new Label(),new Label(),new Label());
 
-        hbox.getChildren().addAll(new Label(), vbox);
+        Button button = new Button("评价商家");
+        button.setOnAction(e -> {
+            try {
+                handleCommentClick();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        label2.setFont(new javafx.scene.text.Font(20));
+        hbox.getChildren().addAll(new Label(), vbox,new Label(),new Label(),button);
         hbox.setSpacing(10);
 
         return hbox;
     }
+
+    private void handleCommentClick() throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("commentSellerStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        CommentSellerStageController commentSellerStageController = fxmlLoader.getController();
+        commentSellerStageController.init();
+        stage.setScene(scene);
+        stage.show();
+    }
+
     public void handleItemClick(OrderOverview orderOverview) throws IOException, SQLException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("historyOrderDetailStage-view.fxml"));
