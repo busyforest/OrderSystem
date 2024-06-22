@@ -31,6 +31,8 @@ public class SellerMainStageController {
     @FXML
     public Button newDishButton;
     @FXML
+    public Button messageButton;
+    @FXML
     public Button checkoutButton;
     @FXML
     public Label nameLabel;
@@ -223,6 +225,17 @@ public class SellerMainStageController {
         Scene scene = new Scene(fxmlLoader.load());
         NewDishStageController newDishStageController = fxmlLoader.getController();
         newDishStageController.seller = seller;
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    protected void handleMessageClick() throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("messageStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        MessageStageController messageStageController = fxmlLoader.getController();
+        messageStageController.user = (User)seller;
+        messageStageController.init();
         stage.setScene(scene);
         stage.show();
     }

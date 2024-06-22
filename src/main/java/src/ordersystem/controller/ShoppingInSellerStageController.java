@@ -20,6 +20,7 @@ import javafx.util.Duration;
 import src.ordersystem.MainApplication;
 import src.ordersystem.SQLLoader;
 import src.ordersystem.entity.Dish;
+import src.ordersystem.entity.Message;
 import src.ordersystem.entity.Purchaser;
 import src.ordersystem.entity.Seller;
 
@@ -179,6 +180,11 @@ public class ShoppingInSellerStageController {
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
         sqlLoader.purchaseDishList(this.purchaser.getId(), cartList, "在线点餐");
+        Message message = new Message();
+        message.setSender_id(purchaser.getId());
+        message.setReceiver_id(seller.getId());
+        message.setMessage("您有新订单了！ 来自"+purchaser.getName()+"的订单");
+        sqlLoader.insertMessage(message);
         // 提示信息
         Label label = new Label("支付成功！");
         StackPane root = new StackPane();
