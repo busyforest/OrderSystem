@@ -1,15 +1,22 @@
 package src.ordersystem.controller;
 
+import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class SignUpStageController {
     @FXML
@@ -97,5 +104,32 @@ public class SignUpStageController {
         TextField validField = new TextField();
         validBox.getChildren().addAll(validLabel,new Label(),validField);
         vBox.getChildren().addAll(validBox);
+    }
+    @FXML
+    protected void handlePreviewClick(){
+        String imageURL = avatarField.getText();
+        Stage stage = new Stage();
+        try {
+            ImageView imageView = new ImageView(new Image(imageURL));
+            imageView.setFitWidth(200);
+            imageView.setFitHeight(200);
+            StackPane stackPane = new StackPane();
+            stackPane.getChildren().add(imageView);
+            Scene scene = new Scene(stackPane);
+            stage.setScene(scene);
+            stage.show();
+        }catch (IllegalArgumentException e){
+            // 提示信息
+            Label label = new Label("路径不正确！");
+            StackPane root = new StackPane();
+            root.getChildren().add(label);
+            Stage primaryStage = new Stage();
+            Scene scene = new Scene(root, 250, 150);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            PauseTransition delay = new PauseTransition(Duration.seconds(1));
+            delay.setOnFinished(event -> primaryStage.close());
+            delay.play();
+        }
     }
 }

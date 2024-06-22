@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.HistoryOrderDetailStageController">
+   <children>
+      <Label layoutX="39.0" layoutY="35.0" text="订单详情">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Pagination layoutX="39.0" layoutY="87.0" prefHeight="270.0" prefWidth="529.0" fx:id="pagination"/>
+   </children>
+</AnchorPane>

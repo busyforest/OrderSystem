@@ -27,7 +27,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -380,7 +380,55 @@ public class SQLLoader {
         }
         return orderList;
     }
-    //根据id获得名字
+    // 从一个订单中获取所有的菜
+    public ArrayList<Dish> getDishesInOrderOverview(OrderOverview orderOverview) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        ArrayList<Dish> dishes = new ArrayList<>();
+        ArrayList<Integer> dishIds = new ArrayList<>();
+        sb.append("select * from order_dish where order_id = " + orderOverview.getOrderID());
+        ResultSet resultSet = statement.executeQuery(sb.toString());
+        while (resultSet.next()){
+            dishIds.add(resultSet.getInt("dish_id"));
+        }
+        Statement statement1 = connect.createStatement();
+        for(Integer id: dishIds){
+            String getDish = "select * from dish where dish_id = " + id;
+            ResultSet resultSet1 =  statement1.executeQuery(getDish);
+            while (resultSet1.next()) {
+                Dish dish = new Dish();
+                dish.setDishId(resultSet1.getInt("dish_id"));
+                dish.setSellerId(resultSet1.getInt("seller_id"));
+                dish.setDishName(resultSet1.getString("name"));
+                dish.setDishPrice(resultSet1.getInt("price"));
+                dish.setDishPictureUrl(resultSet1.getString("picture"));
+                dish.setDishDescription(resultSet1.getString("description"));
+                dish.setIngredients(resultSet1.getString("ingredients"));
+                dish.setNutritionInfo(resultSet1.getString("nutrition_information"));
+                dish.setPossibleAllergens(resultSet1.getString("possible_allergens"));
+                dish.setAvg_mark(resultSet1.getFloat("avg_mark"));
+                dishes.add(dish);
+            }
+        }
+        return dishes;
+    }
+    // 根据order_id 获得 order_dish
+    public ArrayList<OrderDish> getOrderDishByOrderID(int orderID) throws SQLException {
+        ArrayList<OrderDish> orderDishes = new ArrayList<>();
+        String string = "select * from order_dish where order_id = "+ orderID;
+        ResultSet resultSet = statement.executeQuery(string);
+        while(resultSet.next()){
+            OrderDish orderDish = new OrderDish();
+            orderDish.setOrderID(orderID);
+            orderDish.setDishID(resultSet.getInt("dish_id"));
+            orderDish.setQuantity(resultSet.getInt("quantity"));
+            orderDish.setPurChaseMethod(resultSet.getString("purchase_method"));
+            orderDish.setComment(resultSet.getString("comment"));
+            orderDish.setMark(resultSet.getDouble("mark"));
+            orderDishes.add(orderDish);
+        }
+        return orderDishes;
+    }
+    // 根据id获得名字
     // TODO:如果表结构改了这里要相应调整
     public String getName(int id) throws SQLException {
         String name =null;
