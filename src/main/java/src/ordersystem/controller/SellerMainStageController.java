@@ -122,6 +122,14 @@ public class SellerMainStageController {
             }
         });
         deleteButton.setOnAction(e->{
+            SQLLoader sqlLoader = new SQLLoader();
+            try {
+                sqlLoader.connect();
+                sqlLoader.deleteDish(dishes.get(index).getDishId());
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+
             // 提示信息
             Label label = new Label("删除成功！");
             StackPane root = new StackPane();
@@ -135,6 +143,12 @@ public class SellerMainStageController {
             delay.play();
             Stage stage = (Stage) deleteButton.getScene().getWindow();
             stage.close();
+            try {
+                getAllDishes();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
+            stage.show();
         });
 
         VBox vbox = new VBox();
