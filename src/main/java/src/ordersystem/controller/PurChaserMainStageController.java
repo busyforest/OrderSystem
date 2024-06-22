@@ -26,6 +26,8 @@ public class PurChaserMainStageController {
     @FXML
     public Button historyButton;
     @FXML
+    public Button infoButton;
+    @FXML
     public Label nameLabel;
 
     @FXML
@@ -157,6 +159,17 @@ public class PurChaserMainStageController {
         PurChaserHistoryStageController purChaserHistoryStageController = fxmlLoader.getController();
         purChaserHistoryStageController.purchaser = this.purchaser;
         purChaserHistoryStageController.init();
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    protected void handleInformationClick() throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("purChaserInformationStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        PurChaserInformationStageController purChaserInformationStageController = fxmlLoader.getController();
+        purChaserInformationStageController.purchaser = purchaser;
+        purChaserInformationStageController.init();
         stage.setScene(scene);
         stage.show();
     }

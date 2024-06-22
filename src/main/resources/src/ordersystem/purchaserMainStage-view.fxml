@@ -21,7 +21,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <VBox prefHeight="600.0" prefWidth="260.0">
+      <VBox prefHeight="750.0" prefWidth="254.0">
          <children>
             <AnchorPane prefHeight="225.0" prefWidth="264.0">
                <children>
@@ -52,7 +52,12 @@
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="切换账号">
+            <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="258.0" text="个人信息" fx:id="infoButton" onAction="#handleInformationClick">
+               <font>
+                  <Font name="Algerian" size="21.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" prefHeight="90.0" prefWidth="307.0" text="切换账号">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
