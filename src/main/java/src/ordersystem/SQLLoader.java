@@ -42,7 +42,7 @@ public class SQLLoader {
                     "AFTER INSERT ON orderOverview\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
-                    "    INSERT INTO message VALUES (NEW.purchaser_id, 1, ‘用户’+NEW.purchaser_name+'购买了您的商品', NOW());\n" +
+                    "    INSERT INTO message VALUES (NEW.purchaser_id, 1, '有新的订单需要处理', NOW());\n" +
                     "    INSERT INTO message VALUES (1, NEW.purchaser_id, '您的订单已提交，请耐心等待', NOW());\n"+
                     "END;");
             statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS SEND_MESSAGE_AFTER_UPDATE_STATUS\n" +
@@ -58,7 +58,7 @@ public class SQLLoader {
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
                     "    UPDATE message set receiver_id = (select seller_id from dish where dish_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.sender_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n" +
-                    "    UPDATE message set sender_id = (select seller_id from dish where order_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.receiver_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n"+
+                    "    UPDATE message set sender_id = (select seller_id from dish where dish_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.receiver_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n"+
                     "END;");
             statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_DISH_AVG_MARK\n" +
                     "AFTER UPDATE ON order_dish\n" +
@@ -70,7 +70,11 @@ public class SQLLoader {
                     "AFTER INSERT ON order_dish\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
-                    "    UPDATE dish set sales_volume = sales_volume + NEW.quantity where dish_id = NEW.dish_id;\n" +
+                    "    IF NEW.purchase_method = '在线点餐' THEN\n" +
+                    "       UPDATE dish set online_sales_volume = online_sales_volume + NEW.quantity where dish_id = NEW.dish_id;\n" +
+                    "    ELSEIF NEW.purchase_method = '排队点餐' THEN\n" +
+                    "       UPDATE dish set offline_sales_volume = offline_sales_volume + NEW.quantity where dish_id = NEW.dish_id;\n" +
+                    "    END IF;\n" +
                     "END;");
         }
         catch (Exception e){
@@ -291,11 +295,11 @@ public class SQLLoader {
     }
 
     //买家购买菜品
-    public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes) throws SQLException {
+    public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes, String purchaseMethod) throws SQLException {
         HashMap<Dish, Integer> dishNum = getDishNum(dishes);
         statement.executeUpdate("insert into orderOverview(purchaser_id, order_time, dish_status) values (" + purchaserId + ", now(), \"已支付\");");
         for(HashMap.Entry <Dish, Integer>  entry : dishNum.entrySet()){
-            statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + entry.getKey().getDishId() +","+entry.getValue()+", null, null);");
+            statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + entry.getKey().getDishId() +","+entry.getValue()+",'"+purchaseMethod+"', null, null);");
         }
     }
     public HashMap getDishNum(ArrayList list){

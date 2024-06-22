@@ -178,7 +178,7 @@ public class ShoppingInSellerStageController {
     public void handlePaying() throws SQLException {
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
-        sqlLoader.purchaseDishList(this.purchaser.getId(), cartList);
+        sqlLoader.purchaseDishList(this.purchaser.getId(), cartList, "在线点餐");
         // 提示信息
         Label label = new Label("支付成功！");
         StackPane root = new StackPane();
