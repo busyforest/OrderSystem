@@ -22,6 +22,8 @@ public class LoginStageController {
     public TextField passwdField;
     @FXML
     public Button loginButton;
+    @FXML
+    public Button signUpButton;
 
     @FXML
     protected void handleLogin() throws IOException, SQLException {
@@ -78,4 +80,15 @@ public class LoginStageController {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    protected void handleSignUpClick() throws IOException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("signUpStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        SignUpStageController signUpStageController = fxmlLoader.getController();
+        signUpStageController.init();
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }
