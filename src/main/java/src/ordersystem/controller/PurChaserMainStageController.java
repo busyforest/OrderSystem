@@ -26,6 +26,8 @@ public class PurChaserMainStageController {
     @FXML
     public Button historyButton;
     @FXML
+    public Button checkoutButton;
+    @FXML
     public Button favButton;
     @FXML
     public Button infoButton;
@@ -185,5 +187,35 @@ public class PurChaserMainStageController {
         purChaserFavoriteStageController.init();
         stage.setScene(scene);
         stage.show();
+    }
+    @FXML
+    protected void handleCheckoutClick(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("确认退出");
+        alert.setContentText("你确定要退出账号吗？");
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> {
+                    Stage stage = (Stage) checkoutButton.getScene().getWindow();
+                    stage.close();
+                    Stage primaryStage = new Stage();
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("loginStage-view.fxml"));
+                    Scene scene = null;
+                    try {
+                        scene = new Scene(fxmlLoader.load());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    SQLLoader sqlLoader = new SQLLoader();
+                    try {
+                        sqlLoader.connect();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    primaryStage.setTitle("Order System");
+                    primaryStage.setScene(scene);
+                    primaryStage.show();
+
+                });
     }
 }
