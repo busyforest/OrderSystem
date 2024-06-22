@@ -112,19 +112,6 @@ public class ShoppingInSellerStageController {
             try {
                 cartList.add(dishes.get(index));
                 handleAddDish();
-                // 获取按钮所在的VBox
-                VBox parentVBox = (VBox) button.getParent();
-
-                // 获取VBox所在的HBox
-                HBox parentHBox = (HBox) parentVBox.getParent();
-
-                // 从HBox中移除VBox
-                parentHBox.getChildren().remove(parentVBox);
-                dishes.remove(index);
-                totalItems = dishes.size();
-                int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
-                pagination.setPageCount(pageCount);
-                pagination.setPageFactory(this::createPage);
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
