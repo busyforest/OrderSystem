@@ -47,7 +47,7 @@ public class DishDetailInformationStageController {
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
         if(sqlLoader.checkFavoriteDish(purchaser.getId(), dish.getDishId())){
-            favButton.setText("已收藏");
+            favButton.setText("取消收藏");
         }
 
     }
