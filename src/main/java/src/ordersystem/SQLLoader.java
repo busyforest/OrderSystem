@@ -194,14 +194,15 @@ public class SQLLoader {
         String checkIfExist = "select * from interact_dish where purchaser_id="+userId+" and dish_id="+dishId;
         ResultSet resultSet = statement.executeQuery(checkIfExist);
         if(resultSet.next()){
-            statement.executeUpdate("update interact_dish set isFavorite=false where purchaser_id="+userId+" and dish_id="+dishId);
+            boolean isFavorite = resultSet.getBoolean("isFavorite");
+            statement.executeUpdate("update interact_dish set isFavorite = " +!isFavorite + " where purchaser_id="+userId+" and dish_id="+dishId);
         }else {
             statement.executeUpdate("insert into interact_dish(purchaser_id,dish_id,isFavorite) values(" + userId + "," + dishId + ",true)");
         }
     }
     // 检查是否已经收藏过了
     public boolean checkFavoriteDish(int userId,int dishId) throws SQLException {
-        String checkIfExist = "select * from interact_dish where purchaser_id="+userId+" and dish_id="+dishId;
+        String checkIfExist = "select * from interact_dish where purchaser_id="+userId+" and dish_id="+dishId+ " and isFavorite = true";
         ResultSet resultSet = statement.executeQuery(checkIfExist);
         if(resultSet.next()){
             return true;
@@ -231,14 +232,34 @@ public class SQLLoader {
     }
 
     //买家查看自己的收藏
-    public ArrayList<Integer> getFavoriteDish(int userId) throws SQLException {
-        String selectFavoriteDish = "select dish_id from interact_dish where purchaser_id="+userId+" and isFavorite='true'";
-        ResultSet resultSet = statement.executeQuery(selectFavoriteDish);
+    public ArrayList<Dish> getFavoriteDish(int userId) throws SQLException {
         ArrayList<Integer> dishIds = new ArrayList<>();
+        ArrayList<Dish> dishes = new ArrayList<>();
+        String selectFavoriteDish = "select dish_id from interact_dish where purchaser_id="+userId+" and isFavorite = true";
+        ResultSet resultSet = statement.executeQuery(selectFavoriteDish);
         while (resultSet.next()){
             dishIds.add(resultSet.getInt("dish_id"));
         }
-        return dishIds;
+        Statement statement1 = connect.createStatement();
+        for(Integer id: dishIds){
+            String getDish = "select * from dish where dish_id = " + id;
+            ResultSet resultSet1 =  statement1.executeQuery(getDish);
+            while (resultSet1.next()) {
+                Dish dish = new Dish();
+                dish.setDishId(resultSet1.getInt("dish_id"));
+                dish.setSellerId(resultSet1.getInt("seller_id"));
+                dish.setDishName(resultSet1.getString("name"));
+                dish.setDishPrice(resultSet1.getInt("price"));
+                dish.setDishPictureUrl(resultSet1.getString("picture"));
+                dish.setDishDescription(resultSet1.getString("description"));
+                dish.setIngredients(resultSet1.getString("ingredients"));
+                dish.setNutritionInfo(resultSet1.getString("nutrition_information"));
+                dish.setPossibleAllergens(resultSet1.getString("possible_allergens"));
+                dish.setAvg_mark(resultSet1.getFloat("avg_mark"));
+                dishes.add(dish);
+            }
+        }
+        return dishes;
     }
 
     //买家或者商家查看消息
