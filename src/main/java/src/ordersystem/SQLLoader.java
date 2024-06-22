@@ -428,6 +428,22 @@ public class SQLLoader {
         }
         return orderDishes;
     }
+    // 根据order_id 和 dish_id 获得Order_dish
+    public OrderDish getOrderDishByOrderIdAndDishId(int orderID, int dishID) throws SQLException {
+        String  s = "select * from order_dish where order_id = " + orderID +" and dish_id = " + dishID;
+        ResultSet resultSet  = statement.executeQuery(s);
+        if(resultSet.next()){
+            OrderDish orderDish = new OrderDish();
+            orderDish.setOrderID(orderID);
+            orderDish.setDishID(resultSet.getInt("dish_id"));
+            orderDish.setQuantity(resultSet.getInt("quantity"));
+            orderDish.setPurChaseMethod(resultSet.getString("purchase_method"));
+            orderDish.setComment(resultSet.getString("comment"));
+            orderDish.setMark(resultSet.getDouble("mark"));
+            return orderDish;
+        }
+        return  null;
+    }
     // 根据id获得名字
     // TODO:如果表结构改了这里要相应调整
     public String getName(int id) throws SQLException {

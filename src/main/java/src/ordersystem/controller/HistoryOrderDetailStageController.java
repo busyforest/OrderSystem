@@ -3,6 +3,7 @@ package src.ordersystem.controller;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.Image;
@@ -15,6 +16,7 @@ import src.ordersystem.SQLLoader;
 import src.ordersystem.entity.Dish;
 import src.ordersystem.entity.OrderDish;
 import src.ordersystem.entity.OrderOverview;
+import src.ordersystem.entity.Seller;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -78,12 +80,34 @@ public class HistoryOrderDetailStageController {
         label2.setFont(new javafx.scene.text.Font(15));
         VBox vbox = new VBox();
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(new Label());
+        Button commentButton = new Button("评价菜品");
+        commentButton.setOnAction(e->{
+
+            try {
+                SQLLoader sqlLoader = new SQLLoader();
+                sqlLoader.connect();
+                OrderDish orderDish = sqlLoader.getOrderDishByOrderIdAndDishId(orderOverview.getOrderID(), dishes.get(index).getDishId());
+                Stage stage = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("commentDishStage-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                CommentDishStageController commentDishStageController = fxmlLoader.getController();
+                commentDishStageController.orderDish = orderDish;
+                commentDishStageController.init();
+                stage.setScene(scene);
+                stage.show();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+        vBox.getChildren().addAll(new Label(),commentButton);
         vbox.getChildren().addAll(label1, label2);
         hbox.getChildren().addAll(imageView, new Label(), vbox,new Label(),new Label(),new Label(),vBox);
         hbox.setSpacing(10);
         return hbox;
     }
+
     public void handleDishClick(Dish dish) throws IOException, SQLException {
         Stage stage = new Stage();
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("historyDishStage-view.fxml"));
