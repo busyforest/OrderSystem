@@ -4,10 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -31,6 +28,8 @@ public class SellerMainStageController {
     public Button searchButton;
     @FXML
     public Button infoButton;
+    @FXML
+    public Button checkoutButton;
     @FXML
     public Label nameLabel;
 
@@ -185,5 +184,34 @@ public class SellerMainStageController {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    protected void handleCheckoutClick(){
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("确认退出");
+        alert.setContentText("你确定要退出账号吗？");
+        alert.showAndWait()
+                .filter(response -> response == ButtonType.OK)
+                .ifPresent(response -> {
+                    Stage stage = (Stage) checkoutButton.getScene().getWindow();
+                    stage.close();
+                    Stage primaryStage = new Stage();
+                    FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("loginStage-view.fxml"));
+                    Scene scene = null;
+                    try {
+                        scene = new Scene(fxmlLoader.load());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    SQLLoader sqlLoader = new SQLLoader();
+                    try {
+                        sqlLoader.connect();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    primaryStage.setTitle("Order System");
+                    primaryStage.setScene(scene);
+                    primaryStage.show();
 
+                });
+    }
 }

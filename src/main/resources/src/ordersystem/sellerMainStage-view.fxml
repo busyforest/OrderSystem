@@ -52,7 +52,7 @@
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="切换账号">
+            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="切换账号" fx:id="checkoutButton" onAction="#handleCheckoutClick">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
