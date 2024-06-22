@@ -71,6 +71,7 @@ create table if not exists dish(
     nutrition_information varchar(50),
     possible_allergens varchar(50),
     avg_mark float,
+    sales_volume int,
     primary key (dish_id),
     foreign key (seller_id) references seller(id)
 );
@@ -78,6 +79,7 @@ create table if not exists dish(
 create table if not exists order_dish(
     order_id int,
     dish_id int,
+    quantity int,
     comment varchar(50),
     mark int,
     primary key (order_id, dish_id),
@@ -95,3 +97,4 @@ create table if not exists interact_dish(
     foreign key (purchaser_id) references purchaser(id),
     foreign key (dish_id) references dish(dish_id)
 );
+

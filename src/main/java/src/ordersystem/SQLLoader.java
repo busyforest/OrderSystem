@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -26,11 +27,13 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
         statement = connect.createStatement();
+//        init();
+//        insert();
     }
     public  void init(){
         run("src/main/SQLStatements/init.sql");
@@ -39,7 +42,8 @@ public class SQLLoader {
                     "AFTER INSERT ON orderOverview\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
-                    "    INSERT INTO message VALUES (NEW.purchaser_id, 1, '您已成功下单，请耐心等待卖家发货', NOW());\n" +
+                    "    INSERT INTO message VALUES (NEW.purchaser_id, 1, ‘用户’+NEW.purchaser_name+'购买了您的商品', NOW());\n" +
+                    "    INSERT INTO message VALUES (1, NEW.purchaser_id, '您的订单已提交，请耐心等待', NOW());\n"+
                     "END;");
             statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS SEND_MESSAGE_AFTER_UPDATE_STATUS\n" +
                     "AFTER UPDATE ON orderOverview\n" +
@@ -54,12 +58,19 @@ public class SQLLoader {
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
                     "    UPDATE message set receiver_id = (select seller_id from dish where dish_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.sender_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n" +
+                    "    UPDATE message set sender_id = (select seller_id from dish where order_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.receiver_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n"+
                     "END;");
             statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_DISH_AVG_MARK\n" +
                     "AFTER UPDATE ON order_dish\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
                     "    UPDATE dish set avg_mark = (select AVG(mark) from order_dish where dish_id = NEW.dish_id) where dish_id = NEW.dish_id;\n" +
+                    "END;");
+            statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_DISH_SALES_VOLUME\n"+
+                    "AFTER INSERT ON order_dish\n" +
+                    "FOR EACH ROW\n" +
+                    "BEGIN\n" +
+                    "    UPDATE dish set sales_volume = sales_volume + NEW.quantity where dish_id = NEW.dish_id;\n" +
                     "END;");
         }
         catch (Exception e){
@@ -281,22 +292,32 @@ public class SQLLoader {
 
     //买家购买菜品
     public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes) throws SQLException {
-        dishes = getSingle(dishes);
+        HashMap<Dish, Integer> dishNum = getDishNum(dishes);
         statement.executeUpdate("insert into orderOverview(purchaser_id, order_time, dish_status) values (" + purchaserId + ", now(), \"已支付\");");
-        for(Dish dish : dishes){
-            statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + dish.getDishId() + ", null, null);");
+        for(HashMap.Entry <Dish, Integer>  entry : dishNum.entrySet()){
+            statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + entry.getKey().getDishId() +","+entry.getValue()+", null, null);");
         }
     }
-    public ArrayList getSingle(ArrayList list){
-        ArrayList newList = new ArrayList();     //创建新集合
-        Iterator it = list.iterator();        //根据传入的集合(旧集合)获取迭代器
-        while(it.hasNext()){          //遍历老集合
-            Object obj = it.next();       //记录每一个元素
-            if(!newList.contains(obj)){      //如果新集合中不包含旧集合中的元素
-                newList.add(obj);       //将元素添加
+    public HashMap getDishNum(ArrayList list){
+        HashMap<Dish, Integer> map = new HashMap<>();
+        ArrayList newList = new ArrayList();
+        Iterator it = list.iterator();
+        while(it.hasNext()){
+            Object obj = it.next();
+            if(!newList.contains(obj)){
+                newList.add(obj);
             }
         }
-        return newList;
+        for(Object obj : newList){
+            int count = 0;
+            for(Object obj1 : list){
+                if(obj.equals(obj1)){
+                    count++;
+                }
+            }
+            map.put((Dish)obj, count);
+        }
+        return map;
     }
 
     //没搜索的时候显示所有卖家
