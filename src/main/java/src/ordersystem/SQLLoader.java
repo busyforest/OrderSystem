@@ -288,12 +288,16 @@ public class SQLLoader {
             message.setSender_id(resultSet.getInt("sender_id"));
             message.setReceiver_id(resultSet.getInt("receiver_id"));
             message.setMessage(resultSet.getString("message"));
-            message.setTime(resultSet.getTimestamp("time"));
+            message.setTime(resultSet.getTimestamp("message_time"));
             messages.add(message);
         }
         return messages;
     }
 
+    // 发送消息
+    public void insertMessage(Message message) throws SQLException {
+        statement.executeUpdate("insert into message(sender_id, receiver_id, message, message_time) values (" + message.getSender_id()+", " +message.getReceiver_id()+", \"" + message.getMessage()+"\" , now())");
+    }
     //买家购买菜品
     public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes, String purchaseMethod) throws SQLException {
         HashMap<Dish, Integer> dishNum = getDishNum(dishes);
