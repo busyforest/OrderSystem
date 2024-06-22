@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.SellerInformationStageController">
+   <children>
+      <Label layoutX="26.0" layoutY="26.0" text="用户名，" fx:id="nameHeadLabel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="26.0" layoutY="62.0" text="您的基本信息如下：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="16.0" layoutY="145.0" text="用户ID：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="185.0" text="简介：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="109.0" text="昵称：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="221.0" text="地址：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="16.0" layoutY="261.0" text="特色菜：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="298.0" text="评分：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="118.0" fitWidth="118.0" layoutX="428.0" layoutY="40.0" pickOnBounds="true" preserveRatio="true" fx:id="avatarImageView"/>
+      <Label layoutX="96.0" layoutY="109.0" prefHeight="30.0" prefWidth="293.0" fx:id="nameLabel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="96.0" layoutY="145.0" prefHeight="30.0" prefWidth="293.0" fx:id="idLabel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="96.0" layoutY="185.0" prefHeight="30.0" prefWidth="293.0" fx:id="descriptionLabel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="96.0" layoutY="221.0" prefHeight="30.0" prefWidth="293.0" fx:id="addressLabel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="96.0" layoutY="261.0" prefHeight="30.0" prefWidth="293.0" fx:id="featuredDishLabel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="96.0" layoutY="298.0" prefHeight="30.0" prefWidth="293.0" fx:id="markLabel">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

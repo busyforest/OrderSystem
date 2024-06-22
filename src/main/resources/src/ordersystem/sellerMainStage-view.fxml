@@ -37,7 +37,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <Button  mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的信息">
+            <Button  mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的信息" fx:id="infoButton" onAction="#handleInformationClick">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>

@@ -30,6 +30,8 @@ public class SellerMainStageController {
     @FXML
     public Button searchButton;
     @FXML
+    public Button infoButton;
+    @FXML
     public Label nameLabel;
 
     @FXML
@@ -172,4 +174,16 @@ public class SellerMainStageController {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    protected void handleInformationClick() throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("sellerInformationStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        SellerInformationStageController sellerInformationStageController = fxmlLoader.getController();
+        sellerInformationStageController.seller = seller;
+        sellerInformationStageController.init();
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }
