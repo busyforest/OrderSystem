@@ -55,14 +55,15 @@ public class DishDetailInformationStageController {
     protected void handleFavButtonClicked() throws SQLException {
         // 提示信息
         Label label = new Label("添加成功！");
-        if(favButton.getText().equals("已收藏")){
-            label.setText("该菜品已收藏！");
+        if(favButton.getText().equals("取消收藏")){
+            label.setText("已取消收藏！");
+            favButton.setText("收藏这道菜");
         }else{
-            SQLLoader sqlLoader = new SQLLoader();
-            sqlLoader.connect();
-            sqlLoader.favoriteDish(purchaser.getId(), dish.getDishId());
-            favButton.setText("已收藏");
+            favButton.setText("取消收藏");
         }
+        SQLLoader sqlLoader = new SQLLoader();
+        sqlLoader.connect();
+        sqlLoader.favoriteDish(purchaser.getId(), dish.getDishId());
         StackPane root = new StackPane();
         root.getChildren().add(label);
         Stage primaryStage = new Stage();

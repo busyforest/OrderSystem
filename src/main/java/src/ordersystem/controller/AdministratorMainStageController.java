@@ -10,4 +10,5 @@ public class AdministratorMainStageController {
     public void init(User user){
         nameLabel.setText(user.getName());
     }
+
 }

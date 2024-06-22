@@ -165,7 +165,7 @@ public class PurChaserMainStageController {
     @FXML
     protected void handleInformationClick() throws IOException, SQLException {
         Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("purChaserInformationStage-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("purchaserInformationStage-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         PurChaserInformationStageController purChaserInformationStageController = fxmlLoader.getController();
         purChaserInformationStageController.purchaser = purchaser;
