@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="427.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.NewDishStageController">
+   <children>
+      <Label layoutX="24.0" layoutY="22.0" text="发布新菜品">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="77.0" text="名称：">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="117.0" text="简介：">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="157.0" text="配料：">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="200.0" text="营养成分：">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="32.0" layoutY="240.0" text="过敏原：">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="50.0" layoutY="280.0" text="价格：">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="14.0" layoutY="320.0" text="图片路径：">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <TextField layoutX="104.0" layoutY="78.0" prefHeight="27.0" prefWidth="164.0" fx:id="nameField"/>
+      <TextField layoutX="104.0" layoutY="117.0" prefHeight="27.0" prefWidth="426.0" fx:id="descriptionField"/>
+      <TextField layoutX="104.0" layoutY="157.0" prefHeight="27.0" prefWidth="426.0" fx:id="ingredientField"/>
+      <TextField layoutX="104.0" layoutY="200.0" prefHeight="27.0" prefWidth="426.0" fx:id="nutritionField"/>
+      <TextField layoutX="104.0" layoutY="240.0" prefHeight="27.0" prefWidth="426.0" fx:id="allergenField"/>
+      <TextField layoutX="104.0" layoutY="280.0" prefHeight="27.0" prefWidth="426.0" fx:id="priceField"/>
+      <TextField layoutX="104.0" layoutY="320.0" prefHeight="27.0" prefWidth="327.0" fx:id="imageField"/>
+      <Button layoutX="468.0" layoutY="320.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="62.0" text="预览..." fx:id="previewButton" onAction="#handlePreviewClick"/>
+      <Button layoutX="246.0" layoutY="368.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="110.0" text="确认发布" fx:id="confirmButton" onAction="#handleConfirmClick">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

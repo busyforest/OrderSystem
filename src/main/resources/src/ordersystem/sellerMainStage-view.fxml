@@ -42,7 +42,7 @@
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="发布菜品">
+            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="发布菜品" fx:id="newDishButton" onAction="#handleNewDishClick">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
