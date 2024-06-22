@@ -96,7 +96,6 @@ public class ShoppingInSellerStageController {
         ImageView imageView = new ImageView(new Image(dishes.get(index).getDishPictureUrl()));
         imageView.setFitHeight(100);
         imageView.setFitWidth(100);
-//        imageView.setPreserveRatio(true);
 
         Label label1 = new Label(dishes.get(index).getDishName());
         label1.setFont(new javafx.scene.text.Font(20));
@@ -104,19 +103,33 @@ public class ShoppingInSellerStageController {
         Label label2 = new Label("菜品简介：" + dishes.get(index).getDishDescription());
         label2.setFont(new javafx.scene.text.Font(15));
         Button button = new Button("添加到购物车");
-        button.setOnMouseClicked(event -> {
-                try {
-                    cartList.add(dishes.get(index));
-                    handleAddDish();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
         VBox vbox = new VBox();
         VBox vBox = new VBox();
         vBox.getChildren().addAll(new Label(),button);
         vbox.getChildren().addAll(label1, label2);
         hbox.getChildren().addAll(imageView, new Label(), vbox,new Label(),new Label(),new Label(),vBox);
+        button.setOnMouseClicked(event -> {
+            try {
+                cartList.add(dishes.get(index));
+                handleAddDish();
+                // 获取按钮所在的VBox
+                VBox parentVBox = (VBox) button.getParent();
+
+                // 获取VBox所在的HBox
+                HBox parentHBox = (HBox) parentVBox.getParent();
+
+                // 从HBox中移除VBox
+                parentHBox.getChildren().remove(parentVBox);
+                dishes.remove(index);
+                totalItems = dishes.size();
+                int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+                pagination.setPageCount(pageCount);
+                pagination.setPageFactory(this::createPage);
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         hbox.setSpacing(10);
 
         return hbox;
@@ -125,7 +138,7 @@ public class ShoppingInSellerStageController {
         totalCartItems = cartList.size();
         int pageCount = (int) Math.ceil((double) totalCartItems / ITEMS_PER_PAGE);
         dishCartPagination.setPageCount(pageCount);
-       dishCartPagination.setPageFactory(this::createCartPage);
+        dishCartPagination.setPageFactory(this::createCartPage);
         float sum = 0;
         for(Dish dish : cartList){
             sum += dish.getDishPrice();
