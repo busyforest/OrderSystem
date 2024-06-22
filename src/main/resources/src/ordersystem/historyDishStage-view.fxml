@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.HistoryDishStageController">
+    <children>
+        <ImageView fx:id="dishImageview" fitHeight="150.0" fitWidth="150.0" layoutX="38.0" layoutY="39.0" pickOnBounds="true" />
+        <Label fx:id="nameLabel" layoutX="304.0" layoutY="87.0" prefHeight="47.0" prefWidth="309.0" text="菜名">
+            <font>
+                <Font size="38.0" />
+            </font>
+        </Label>
+        <Label fx:id="detailLabel" layoutX="38.0" layoutY="225.0" text="简介">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label layoutX="78.0" layoutY="266.0" text="原料：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label layoutX="38.0" layoutY="306.0" text="营养信息：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label layoutX="58.0" layoutY="350.0" text="过敏原：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label fx:id="ingredientsLabel" layoutX="138.0" layoutY="266.0" text="···">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label fx:id="nutritionLabel" layoutX="138.0" layoutY="306.0" text="···">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label fx:id="allergensLabel" layoutX="138.0" layoutY="350.0" text="···">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label layoutX="78.0" layoutY="389.0" text="价格：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label fx:id="priceLabel" layoutX="138.0" layoutY="389.0" text="···">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+    </children>
+</AnchorPane>

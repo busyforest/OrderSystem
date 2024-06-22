@@ -1,12 +1,16 @@
 package src.ordersystem.controller;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import src.ordersystem.MainApplication;
 import src.ordersystem.SQLLoader;
 import src.ordersystem.entity.OrderOverview;
 import src.ordersystem.entity.Purchaser;
@@ -43,6 +47,17 @@ public class PurChaserHistoryStageController {
             HBox hbox = null;
             try {
                 hbox = createItemBox(i, orderList);
+                // 添加点击事件处理程序
+                int finalI = i;
+                hbox.setOnMouseClicked(event -> {
+                    try {
+                        handleItemClick(orderList.get(finalI));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -60,12 +75,25 @@ public class PurChaserHistoryStageController {
         Label label2 = new Label("下单时间: " + orderList.get(index).getOrderTime());
         label2.setFont(new javafx.scene.text.Font(20));
 
+        Label label = new Label("订单状态：" + orderList.get(index).getDishStatus());
+        label2.setFont(new javafx.scene.text.Font(20));
+
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(label1, label2,new Label(),new Label(),new Label());
+        vbox.getChildren().addAll(label1, label2,label,new Label(),new Label(),new Label());
 
         hbox.getChildren().addAll(new Label(), vbox);
         hbox.setSpacing(10);
 
         return hbox;
+    }
+    public void handleItemClick(OrderOverview orderOverview) throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("historyOrderDetailStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        HistoryOrderDetailStageController historyOrderDetailStageController = fxmlLoader.getController();
+        historyOrderDetailStageController.orderOverview = orderOverview;
+        historyOrderDetailStageController.init();
+        stage.setScene(scene);
+        stage.show();
     }
 }
