@@ -165,6 +165,7 @@ public class SQLLoader {
             Administrator administrator = new Administrator();
             administrator.setId(resultSet3.getInt("id"));
             administrator.setName(resultSet3.getString("name"));
+            return administrator;
         }
         return null;
     }
@@ -195,7 +196,9 @@ public class SQLLoader {
     public void deleteSeller(int id) throws SQLException {
         statement.executeUpdate("delete from seller where id="+id);
     }
-    //TODO:修改商家信息
+    public void updateSeller(Seller seller) throws SQLException {
+        statement.executeUpdate("update seller set name = \""+ seller.getName()+"\" ,brief_information = \""+seller.getBriefInfomation()+"\" ,address = \""+ seller.getAddress()+ "\" ,featured_dish = \""+seller.getFeaturedDish()+"\" ,avg_mark = "+ seller.getAvg_mark()+" where id = "+ seller.getId());
+    }
     //管理顾客
     public void addPurchaser(Purchaser purchaser) throws SQLException {
         statement.executeUpdate("insert into purchaser(id,gender,studentIDOrWorkID) values("+purchaser.getId()+",'"+purchaser.getGender()+"',"+purchaser.getStudentIDOrWorkID()+")");
@@ -203,7 +206,9 @@ public class SQLLoader {
     public void deletePurchaser(int id) throws SQLException {
         statement.executeUpdate("delete from purchaser where id="+id);
     }
-    //TODO:修改顾客信息
+    public void updatePurchaser(Purchaser purchaser) throws SQLException {
+        statement.executeUpdate("update purchaser set name = \""+purchaser.getName()+ "\" ,gender= \""+purchaser.getGender()+"\" ,studentIDOrWorkID = "+ purchaser.getStudentIDOrWorkID()+" where id ="+purchaser.getId());
+    }
 
     //买家评论菜品
     public void commentDish(int orderId,int dishId,String comment,int mark) throws SQLException {
