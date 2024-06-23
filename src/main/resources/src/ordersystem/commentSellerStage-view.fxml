@@ -27,7 +27,7 @@
          </font>
       </Label>
       <ComboBox layoutX="172.0" layoutY="298.0" prefHeight="24.0" prefWidth="42.0" fx:id="commentBox"/>
-      <Button layoutX="229.0" layoutY="379.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="132.0" text="提交评价" fx:id="comfirmButton">
+      <Button layoutX="229.0" layoutY="379.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="132.0" text="提交评价" fx:id="comfirmButton" onAction="#handleConfirmClicked">
          <font>
             <Font size="20.0" />
          </font>

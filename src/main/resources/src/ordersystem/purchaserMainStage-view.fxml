@@ -42,22 +42,27 @@
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的收藏"  fx:id="favButton" onAction="#handleFavoriteClick">
+            <Button fx:id="favButton" mnemonicParsing="false" onAction="#handleFavoriteClick" prefHeight="109.0" prefWidth="271.0" text="已收藏菜品">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的消息" fx:id="messageButton" onAction="#handleMessageClick">
+            <Button fx:id="favSellerButton" mnemonicParsing="false" onAction="#handleFavSellerClick" prefHeight="109.0" prefWidth="271.0" text="已收藏商家">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="100.0" prefWidth="258.0" text="个人信息" fx:id="infoButton" onAction="#handleInformationClick">
+            <Button fx:id="messageButton" mnemonicParsing="false" onAction="#handleMessageClick" prefHeight="109.0" prefWidth="271.0" text="我的消息">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="90.0" prefWidth="307.0" text="切换账号" fx:id="checkoutButton" onAction="#handleCheckoutClick">
+            <Button fx:id="infoButton" mnemonicParsing="false" onAction="#handleInformationClick" prefHeight="100.0" prefWidth="258.0" text="个人信息">
+               <font>
+                  <Font name="Algerian" size="21.0" />
+               </font>
+            </Button>
+            <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckoutClick" prefHeight="90.0" prefWidth="307.0" text="切换账号">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
