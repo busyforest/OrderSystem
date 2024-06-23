@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TextField?>
@@ -20,7 +21,7 @@
             <Font size="22.0" />
          </font>
       </Label>
-      <Button fx:id="payButton" layoutX="623.0" layoutY="519.0" mnemonicParsing="false" onAction="#handlePaying" prefHeight="46.0" prefWidth="126.0" text="结算">
+      <Button fx:id="payButton" layoutX="713.0" layoutY="519.0" mnemonicParsing="false" onAction="#handlePaying" prefHeight="46.0" prefWidth="126.0" text="结算">
          <font>
             <Font size="17.0" />
          </font>
@@ -51,5 +52,11 @@
             <Font size="15.0" />
          </font>
       </Button>
+      <ComboBox layoutX="477.0" layoutY="530.0" prefHeight="16.0" prefWidth="96.0" fx:id="comboBox" />
+      <Label fx:id="priceLabel1" layoutX="397.0" layoutY="526.0" prefHeight="32.0" prefWidth="88.0" text="点餐方式：">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
