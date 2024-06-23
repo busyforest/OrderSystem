@@ -27,7 +27,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -235,10 +235,43 @@ public class SQLLoader {
         String checkIfExist = "select * from interact_seller where purchaser_id="+userId+" and seller_id="+sellerId;
         ResultSet resultSet = statement.executeQuery(checkIfExist);
         if(resultSet.next()){
-            statement.executeUpdate("update interact_seller set isFavorite='true' where purchaser_id="+userId+" and seller_id="+sellerId);
+            statement.executeUpdate("update interact_seller set isFavorite = "+ !resultSet.getBoolean("isFavorite")+" where purchaser_id="+userId+" and seller_id="+sellerId);
         }else {
             statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,isFavorite) values(" + userId + "," + sellerId + ",'','true')");
         }
+    }
+    //检查是否收藏过卖家
+    public boolean checkFavoriteSeller(int userId,int sellerId) throws SQLException {
+        String checkIfExist = "select * from interact_seller where purchaser_id="+userId+" and seller_id="+sellerId+ " and isFavorite = true";
+        ResultSet resultSet = statement.executeQuery(checkIfExist);
+        if(resultSet.next()){
+            return true;
+        }else {
+            return false;
+        }
+    }
+    // 根据 order_overview确定卖家
+    public Seller getSellerByOrder(OrderOverview orderOverview) throws SQLException {
+        String s = "select distinct(seller_id) from orderOverview, order_dish, dish where orderOverview.order_id=order_dish.order_id\n" +
+                "and order_dish.dish_id=dish.dish_id and orderOverview.order_id = "+ orderOverview.getOrderID();
+        ResultSet resultSet = statement.executeQuery(s);
+        if(resultSet.next()){
+            int id = resultSet.getInt("seller_id");
+            String s1 = "select * from seller where id =" +id;
+            Statement statement1 = connect.createStatement();
+            ResultSet resultSet1 = statement1.executeQuery(s1);
+            if (resultSet1.next()){
+                Seller seller = new Seller();
+                seller.setId(resultSet1.getInt("id"));
+                seller.setName(resultSet1.getString("name"));
+                seller.setAddress(resultSet1.getString("address"));
+                seller.setBriefInfomation(resultSet1.getString("brief_information"));
+                seller.setFeaturedDish(resultSet1.getString("featured_dish"));
+                seller.setAvg_mark(resultSet1.getFloat("avg_mark"));
+                return seller;
+            }
+        }
+        return null;
     }
     //买家评论商家
     public void commentSeller(int userId,int sellerId,String comment, int mark) throws SQLException {
@@ -247,7 +280,7 @@ public class SQLLoader {
         if(resultSet.next()){
             statement.executeUpdate("update interact_seller set comment='"+comment+"', mark="+mark+" where purchaser_id="+userId+" and seller_id="+sellerId);
         }else {
-            statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,mark,isFavorite) values(" + userId + "," + sellerId + ",'" + comment + "',"+mark+",'false')");
+            statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,mark,isFavorite) values(" + userId + "," + sellerId + ",'" + comment + "',"+mark+",false)");
         }
     }
 
@@ -280,6 +313,32 @@ public class SQLLoader {
             }
         }
         return dishes;
+    }
+    // 买家查看收藏商家
+    public ArrayList<Seller> getFavoriteSeller(int userId) throws SQLException {
+        ArrayList<Integer> sellerIds = new ArrayList<>();
+        ArrayList<Seller> sellers = new ArrayList<>();
+        String selectFavoriteSeller = "select seller_id from interact_seller where purchaser_id="+userId+" and isFavorite = true";
+        ResultSet resultSet = statement.executeQuery(selectFavoriteSeller);
+        while (resultSet.next()){
+            sellerIds.add(resultSet.getInt("seller_id"));
+        }
+        Statement statement1 = connect.createStatement();
+        for(Integer id: sellerIds){
+            String getSeller = "select * from seller where id = " + id;
+            ResultSet resultSet1 =  statement1.executeQuery(getSeller);
+            while (resultSet1.next()) {
+                Seller seller = new Seller();
+                seller.setId(resultSet1.getInt("id"));
+                seller.setName(resultSet1.getString("name"));
+                seller.setAddress(resultSet1.getString("address"));
+                seller.setBriefInfomation(resultSet1.getString("brief_information"));
+                seller.setFeaturedDish(resultSet1.getString("featured_dish"));
+                seller.setAvg_mark(resultSet1.getFloat("avg_mark"));
+                sellers.add(seller);
+            }
+        }
+        return sellers;
     }
 
     //买家或者商家查看消息

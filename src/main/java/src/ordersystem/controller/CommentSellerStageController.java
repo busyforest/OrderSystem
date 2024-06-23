@@ -40,8 +40,7 @@ public class CommentSellerStageController {
     @FXML
     protected void handleConfirmClicked() throws SQLException {
         String commentString = commentArea.getText();
-        //TODO: 评价星级
-        int mark = 0;
+        int mark = Integer.parseInt((String) commentBox.getValue());
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
         sqlLoader.commentSeller(purchaser.getId(),seller.getId(),commentString, mark);

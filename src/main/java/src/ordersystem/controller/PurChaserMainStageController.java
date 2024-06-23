@@ -30,6 +30,8 @@ public class PurChaserMainStageController {
     @FXML
     public Button favButton;
     @FXML
+    public Button favSellerButton;
+    @FXML
     public Button messageButton;
     @FXML
     public Button infoButton;
@@ -228,6 +230,17 @@ public class PurChaserMainStageController {
         MessageStageController messageStageController = fxmlLoader.getController();
         messageStageController.user = (User)purchaser;
         messageStageController.init();
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    protected void handleFavSellerClick() throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("purchaserFavoriteSellerStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        PurchaserFavoriteSellerStageController purchaserFavoriteSellerStageController  = fxmlLoader.getController();
+        purchaserFavoriteSellerStageController.purchaser = purchaser;
+        purchaserFavoriteSellerStageController.init();
         stage.setScene(scene);
         stage.show();
     }
