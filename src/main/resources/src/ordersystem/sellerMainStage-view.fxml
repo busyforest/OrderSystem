@@ -21,7 +21,7 @@
             <Font size="15.0" />
          </font>
       </Button>
-      <VBox prefHeight="600.0" prefWidth="260.0">
+      <VBox prefHeight="750.0" prefWidth="260.0">
          <children>
             <AnchorPane prefHeight="225.0" prefWidth="264.0">
                <children>
@@ -37,22 +37,27 @@
                   </Label>
                </children>
             </AnchorPane>
-            <Button  mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的信息" fx:id="infoButton" onAction="#handleInformationClick">
+            <Button fx:id="messageButton" mnemonicParsing="false" onAction="#handleMessageClick" prefHeight="109.0" prefWidth="271.0" text="我的消息">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="发布菜品" fx:id="newDishButton" onAction="#handleNewDishClick">
+            <Button fx:id="orderButton" mnemonicParsing="false" onAction="#handleOrderClick" prefHeight="108.0" prefWidth="266.0" text="待处理订单">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的消息" fx:id="messageButton" onAction="#handleMessageClick">
+            <Button fx:id="newDishButton" mnemonicParsing="false" onAction="#handleNewDishClick" prefHeight="109.0" prefWidth="271.0" text="发布菜品">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="切换账号" fx:id="checkoutButton" onAction="#handleCheckoutClick">
+            <Button fx:id="infoButton" mnemonicParsing="false" onAction="#handleInformationClick" prefHeight="109.0" prefWidth="271.0" text="我的信息">
+               <font>
+                  <Font name="Algerian" size="21.0" />
+               </font>
+            </Button>
+            <Button fx:id="checkoutButton" mnemonicParsing="false" onAction="#handleCheckoutClick" prefHeight="109.0" prefWidth="271.0" text="切换账号">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>

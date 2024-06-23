@@ -35,6 +35,8 @@ public class SellerMainStageController {
     @FXML
     public Button checkoutButton;
     @FXML
+    public Button orderButton;
+    @FXML
     public Label nameLabel;
 
     @FXML
@@ -238,5 +240,17 @@ public class SellerMainStageController {
         messageStageController.init();
         stage.setScene(scene);
         stage.show();
+    }
+    @FXML
+    protected void handleOrderClick() throws IOException, SQLException {
+        Stage stage = new Stage();
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("sellerOrderStage-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        SellerOrderStageController sellerOrderStageController = fxmlLoader.getController();
+        sellerOrderStageController.seller = seller;
+        sellerOrderStageController.init();
+        stage.setScene(scene);
+        stage.show();
+
     }
 }

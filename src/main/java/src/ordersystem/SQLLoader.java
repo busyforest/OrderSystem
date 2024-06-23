@@ -1,4 +1,5 @@
 package src.ordersystem;
+import com.mysql.cj.jdbc.CallableStatement;
 import com.mysql.jdbc.Driver;
 import src.ordersystem.entity.*;
 
@@ -468,6 +469,32 @@ public class SQLLoader {
             orderOverview.setOrderTime(resultSet.getString("order_time"));
             orderOverview.setDishStatus(resultSet.getString("dish_status"));
             orderList.add(orderOverview);
+        }
+        return orderList;
+    }
+    public ArrayList<OrderOverview> getOrder(Seller seller) throws SQLException {
+        StringBuilder sb = new StringBuilder();
+        String s = "select distinct(orderoverview.order_id) from orderOverview, order_dish, dish where orderOverview.order_id=order_dish.order_id\n" +
+                "and order_dish.dish_id=dish.dish_id and dish.seller_id = "+seller.getId();
+        ArrayList<Integer> orderIds = new ArrayList<>();
+        Statement statement1 = connect.createStatement();
+        ResultSet resultSet1 = statement1.executeQuery(s);
+        while (resultSet1.next()){
+            orderIds.add(resultSet1.getInt("order_id"));
+        }
+        ArrayList<OrderOverview> orderList = new ArrayList<>();
+        for (int i = 0;i<orderIds.size();i++) {
+            sb.setLength(0);
+            sb.append("select * from orderoverview where order_id = " + orderIds.get(i));
+            ResultSet resultSet = statement.executeQuery(sb.toString());
+            if (resultSet.next()) {
+                OrderOverview orderOverview = new OrderOverview();
+                orderOverview.setOrderID(resultSet.getInt("order_id"));
+                orderOverview.setPurChaserID(resultSet.getInt("purchaser_id"));
+                orderOverview.setOrderTime(resultSet.getString("order_time"));
+                orderOverview.setDishStatus(resultSet.getString("dish_status"));
+                orderList.add(orderOverview);
+            }
         }
         return orderList;
     }
