@@ -3,13 +3,12 @@ package src.ordersystem.controller;
 import javafx.animation.PauseTransition;
 import javafx.beans.Observable;
 import javafx.beans.binding.Bindings;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
@@ -45,6 +44,8 @@ public class ShoppingInSellerStageController {
     @FXML
     public Button searchButton;
     @FXML
+    public ComboBox comboBox;
+    @FXML
     public TextField searchField;
     private ArrayList<Dish> dishes;
     private ArrayList<Dish> cartList;
@@ -56,6 +57,13 @@ public class ShoppingInSellerStageController {
     public Purchaser purchaser;
     @FXML
     public void init(Seller seller) throws SQLException {
+        ObservableList<String> options =
+                FXCollections.observableArrayList(
+                        "在线点餐",
+                        "排队点餐"
+                );
+        comboBox.setItems(options);
+        comboBox.setValue("在线点餐");
         cartList = new ArrayList<>();
         exLabel.setText(purchaser.getName()+", 你进入了商家："+seller.getName());
         this.seller = seller;
@@ -179,7 +187,7 @@ public class ShoppingInSellerStageController {
     public void handlePaying() throws SQLException {
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
-        sqlLoader.purchaseDishList(this.purchaser.getId(), cartList, "在线点餐");
+        sqlLoader.purchaseDishList(this.purchaser.getId(), cartList, (String) comboBox.getValue());
         Message message = new Message();
         message.setSender_id(purchaser.getId());
         message.setReceiver_id(seller.getId());
