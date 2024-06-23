@@ -6,6 +6,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -17,6 +18,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import src.ordersystem.MainApplication;
+import src.ordersystem.SQLLoader;
+import src.ordersystem.entity.Administrator;
+import src.ordersystem.entity.Purchaser;
+import src.ordersystem.entity.Seller;
+
+import java.io.IOException;
+import java.sql.SQLException;
 
 public class SignUpStageController {
     @FXML
@@ -33,8 +42,6 @@ public class SignUpStageController {
     public VBox vBox;
     @FXML
     public Button previewButton;
-    @FXML
-    public Button confirmButton;
     public void init(){
         ObservableList<String> options =
                 FXCollections.observableArrayList(
@@ -74,7 +81,77 @@ public class SignUpStageController {
         studentIDLabel.setFont(Font.font(20.0));
         TextField idField = new TextField();
         studentIDBox.getChildren().addAll(studentIDLabel, new Label(),idField);
-        vBox.getChildren().addAll(genderBox,new Label(),studentIDBox);
+        Button confirmButton = new Button("确认注册");
+        confirmButton.setFont(Font.font(20.0));
+        confirmButton.setOnAction(e->{
+            if(nickNameField.getText().isEmpty()||passwordField.getText().isEmpty()||confirmPasswordField.getText().isEmpty()||avatarField.getText().isEmpty()
+            || genderField.getText().isEmpty()||idField.getText().isEmpty()){
+                // 提示信息
+                Label label = new Label("请填写完整信息！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+            } else if (!passwordField.getText().equals(confirmPasswordField.getText())) {
+                // 提示信息
+                Label label = new Label("密码不一致！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+            }else{
+                Purchaser purchaser = new Purchaser();
+                purchaser.setName(nickNameField.getText());
+                purchaser.setStudentIDOrWorkID(Integer.parseInt(idField.getText()));
+                purchaser.setGender(genderField.getText().charAt(0));
+                purchaser.setAvatarPath(avatarField.getText());
+                SQLLoader sqlLoader = new SQLLoader();
+                try {
+                    sqlLoader.connect();
+                    sqlLoader.addPurchaser(purchaser,passwordField.getText());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                // 提示信息
+                Label label = new Label("注册成功！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+                Stage stage = (Stage) confirmButton.getScene().getWindow();
+                stage.close();
+                Stage stage1 = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("purchaserInformationStage-view.fxml"));
+                Scene scene1 = null;
+                try {
+                    scene1 = new Scene(fxmlLoader.load());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+
+                PurChaserInformationStageController purChaserInformationStageController = fxmlLoader.getController();
+                purChaserInformationStageController.purchaser = purchaser;
+                purChaserInformationStageController.init();
+                stage1.setScene(scene1);
+                stage1.show();
+            }
+        });
+        vBox.getChildren().addAll(genderBox,new Label(),studentIDBox, new Label(),confirmButton);
     }
     public void drawSeller(){
         vBox.getChildren().clear();
@@ -93,7 +170,79 @@ public class SignUpStageController {
         featureDishLabel.setFont(Font.font(20.0));
         TextField featureDishField = new TextField();
         featureDishBox.getChildren().addAll(featureDishLabel, new Label(), featureDishField);
-        vBox.getChildren().addAll(infoBox,new Label(),addressBox,new Label(),featureDishBox);
+        Button confirmButton = new Button("确认注册");
+        confirmButton.setFont(Font.font(20.0));
+        confirmButton.setOnAction(e->{
+            if(nickNameField.getText().isEmpty()||passwordField.getText().isEmpty()||confirmPasswordField.getText().isEmpty()||avatarField.getText().isEmpty()
+                    || infoField.getText().isEmpty()||addressField.getText().isEmpty()||featureDishField.getText().isEmpty()){
+                // 提示信息
+                Label label = new Label("请填写完整信息！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+            } else if (!passwordField.getText().equals(confirmPasswordField.getText())) {
+                // 提示信息
+                Label label = new Label("密码不一致！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+            }else{
+                Seller seller = new Seller();
+                seller.setName(nickNameField.getText());
+                seller.setAvatarPath(avatarField.getText());
+                seller.setBriefInfomation(infoField.getText());
+                seller.setAddress(addressField.getText());
+                seller.setFeaturedDish(featureDishField.getText());
+
+                SQLLoader sqlLoader = new SQLLoader();
+                try {
+                    sqlLoader.connect();
+                    sqlLoader.addSeller(seller, passwordField.getText());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                // 提示信息
+                Label label = new Label("注册成功！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+                Stage stage = (Stage) confirmButton.getScene().getWindow();
+                stage.close();
+                Stage stage1 = new Stage();
+                FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("sellerInformationStage-view.fxml"));
+                Scene scene1 = null;
+                try {
+                    scene1 = new Scene(fxmlLoader.load());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                SellerInformationStageController sellerInformationStageController = fxmlLoader.getController();
+                sellerInformationStageController.seller = seller;
+                sellerInformationStageController.init();
+                stage1.setScene(scene1);
+                stage1.show();
+
+            }
+        });
+        vBox.getChildren().addAll(infoBox,new Label(),addressBox,new Label(),featureDishBox, new Label(), confirmButton);
 
     }
     public void drawAdministrator(){
@@ -103,7 +252,72 @@ public class SignUpStageController {
         validLabel.setFont(Font.font(20.0));
         TextField validField = new TextField();
         validBox.getChildren().addAll(validLabel,new Label(),validField);
-        vBox.getChildren().addAll(validBox);
+        Button confirmButton = new Button("确认注册");
+        confirmButton.setFont(Font.font(20.0));
+        confirmButton.setOnAction(e->{
+            if(nickNameField.getText().isEmpty()||passwordField.getText().isEmpty()||confirmPasswordField.getText().isEmpty()||avatarField.getText().isEmpty()
+                    || validField.getText().isEmpty()){
+                // 提示信息
+                Label label = new Label("请填写完整信息！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+            } else if (!passwordField.getText().equals(confirmPasswordField.getText())) {
+                // 提示信息
+                Label label = new Label("密码不一致！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+            } else if (!validField.getText().equals("123456")) {
+                // 提示信息
+                Label label = new Label("秘钥不正确！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+            } else{
+                Administrator administrator = new Administrator();
+                administrator.setName(nickNameField.getText());
+                administrator.setAvatarPath(avatarField.getText());
+                SQLLoader sqlLoader = new SQLLoader();
+                try {
+                    sqlLoader.connect();
+                    sqlLoader.addAdministrator(administrator, passwordField.getText());
+                } catch (SQLException ex) {
+                    throw new RuntimeException(ex);
+                }
+                Label label = new Label("注册成功！");
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 250, 150);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+                PauseTransition delay = new PauseTransition(Duration.seconds(1));
+                delay.setOnFinished(event -> primaryStage.close());
+                delay.play();
+                Stage stage = (Stage) confirmButton.getScene().getWindow();
+                stage.close();
+            }
+        });
+        vBox.getChildren().addAll(validBox, new Label(),new Label(),new Label(),confirmButton);
     }
     @FXML
     protected void handlePreviewClick(){

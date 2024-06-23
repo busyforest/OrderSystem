@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.PurChaserMainStageController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.AdministratorMainStageController">
     <children>
-        <TextField layoutX="333.0" layoutY="287.0" prefHeight="42.0" prefWidth="342.0" />
+        <TextField layoutX="333.0" layoutY="287.0" prefHeight="42.0" prefWidth="342.0" fx:id="idField"/>
         <Button fx:id="searchButton" layoutX="707.0" layoutY="291.0" mnemonicParsing="false" onAction="#handleSearch" prefHeight="35.0" prefWidth="72.0" text="search">
             <font>
                 <Font size="15.0" />
