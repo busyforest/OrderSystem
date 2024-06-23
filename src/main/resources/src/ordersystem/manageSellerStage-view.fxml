@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="491.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.ManageSellerStageController">
+    <children>
+        <Label layoutX="52.0" layoutY="53.0" prefHeight="30.0" prefWidth="82.0" text="用户ID：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label fx:id="idLabel" layoutX="126.0" layoutY="53.0" prefHeight="30.0" prefWidth="231.0">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <Label layoutX="70.0" layoutY="109.0" prefHeight="30.0" prefWidth="63.0" text="昵称：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <TextField fx:id="nameField" focusTraversable="false" layoutX="133.0" layoutY="109.0" prefHeight="30.0" prefWidth="135.0" />
+        <Label layoutX="70.0" layoutY="170.0" prefHeight="30.0" prefWidth="63.0" text="简介：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <TextField focusTraversable="false" layoutX="133.0" layoutY="170.0" prefHeight="30.0" prefWidth="135.0" fx:id="descriptionField"/>
+        <Label layoutX="70.0" layoutY="224.0" prefHeight="30.0" prefWidth="63.0" text="地址：">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Label>
+        <TextField focusTraversable="false" layoutX="135.0" layoutY="224.0" prefHeight="30.0" prefWidth="290.0" fx:id="addressField"/>
+        <Button fx:id="confirmButton" layoutX="246.0" layoutY="424.0" mnemonicParsing="false" onAction="#handleConfirmClick" prefHeight="46.0" prefWidth="110.0" text="确认修改">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Button>
+        <Button fx:id="deleteButton" layoutX="445.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleDeleteClick" prefHeight="46.0" prefWidth="110.0" text="删除用户">
+            <font>
+                <Font size="20.0" />
+            </font>
+        </Button>
+      <Label layoutX="32.0" layoutY="282.0" prefHeight="30.0" prefWidth="110.0" text="特色菜品：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField focusTraversable="false" layoutX="135.0" layoutY="282.0" prefHeight="30.0" prefWidth="290.0" fx:id="featureDishField"/>
+      <Label layoutX="70.0" layoutY="336.0" prefHeight="30.0" prefWidth="63.0" text="评分：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField focusTraversable="false" layoutX="133.0" layoutY="336.0" prefHeight="30.0" prefWidth="82.0" fx:id="markField"/>
+    </children>
+</AnchorPane>

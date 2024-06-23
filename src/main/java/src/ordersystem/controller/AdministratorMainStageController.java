@@ -78,10 +78,11 @@ public class AdministratorMainStageController {
     }
     public void enterSellerStage(User user) throws IOException, SQLException {
         Stage stage = new Stage();
-        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("sellerMainStage-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("manageSellerStage-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        SellerMainStageController sellerMainStageController = fxmlLoader.getController();
-        sellerMainStageController.init(user);
+        ManageSellerStageController manageSellerStageController = fxmlLoader.getController();
+        manageSellerStageController.seller = (Seller)user;
+        manageSellerStageController.init();
         stage.setScene(scene);
         stage.show();
     }
