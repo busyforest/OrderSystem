@@ -27,7 +27,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -76,6 +76,11 @@ public class SQLLoader {
                     "       UPDATE dish set offline_sales_volume = offline_sales_volume + NEW.quantity where dish_id = NEW.dish_id;\n" +
                     "    END IF;\n" +
                     "END;");
+
+            statement.executeUpdate("CREATE INDEX idx_orderOverview_order_time ON orderOverview(order_time);");
+            statement.executeUpdate("CREATE INDEX idx_order_dish_order_id ON order_dish(order_id);");
+            statement.executeUpdate("CREATE INDEX idx_order_dish_dish_id ON order_dish(dish_id);");
+            statement.executeUpdate("CREATE INDEX idx_order_dish_purchaseMethod ON order_dish(purchase_method);");
         }
         catch (Exception e){
             e.printStackTrace();
@@ -236,13 +241,13 @@ public class SQLLoader {
         }
     }
     //买家评论商家
-    public void commentSeller(int userId,int sellerId,String comment) throws SQLException {
+    public void commentSeller(int userId,int sellerId,String comment, int mark) throws SQLException {
         String checkIfExist = "select * from interact_seller where purchaser_id="+userId+" and seller_id="+sellerId;
         ResultSet resultSet = statement.executeQuery(checkIfExist);
         if(resultSet.next()){
-            statement.executeUpdate("update interact_seller set comment='"+comment+"' where purchaser_id="+userId+" and seller_id="+sellerId);
+            statement.executeUpdate("update interact_seller set comment='"+comment+"', mark="+mark+" where purchaser_id="+userId+" and seller_id="+sellerId);
         }else {
-            statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,isFavorite) values(" + userId + "," + sellerId + ",'" + comment + "','false')");
+            statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,mark,isFavorite) values(" + userId + "," + sellerId + ",'" + comment + "',"+mark+",'false')");
         }
     }
 
@@ -295,9 +300,9 @@ public class SQLLoader {
     }
 
     // 发送消息
-    public void insertMessage(Message message) throws SQLException {
-        statement.executeUpdate("insert into message(sender_id, receiver_id, message, message_time) values (" + message.getSender_id()+", " +message.getReceiver_id()+", \"" + message.getMessage()+"\" , now())");
-    }
+//    public void insertMessage(Message message) throws SQLException {
+//        statement.executeUpdate("insert into message(sender_id, receiver_id, message, message_time) values (" + message.getSender_id()+", " +message.getReceiver_id()+", \"" + message.getMessage()+"\" , now())");
+//    }
     //买家购买菜品
     public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes, String purchaseMethod) throws SQLException {
         HashMap<Dish, Integer> dishNum = getDishNum(dishes);
@@ -506,6 +511,33 @@ public class SQLLoader {
             return resultSet.getInt(1);
         }else {
             return 0;
+        }
+    }
+    //查询某个菜品的价格历史
+    public void checkDishPriceHistory(int dishId) throws SQLException {
+        String selectDishPriceHistory = "select * from dish_price_history where dish_id="+dishId;
+        ResultSet resultSet = statement.executeQuery(selectDishPriceHistory);
+        ArrayList<String> priceHistory = new ArrayList<>();
+        while(resultSet.next()){
+            priceHistory.add(resultSet.getString("price")+" "+resultSet.getTimestamp("time"));
+        }
+    }
+    //菜品在一段时间（近一周，近一月，近一年）内不同点餐方式的销量可进行筛选
+    public void checkDishSalesByPurchaseMethod(ArrayList<Dish> dishes, String purchaseMethod, String time) throws SQLException {
+        for (Dish dish : dishes) {
+            int dish_id = dishes.get(0).getDishId();
+            if(purchaseMethod.equals("在线点餐")){
+                String selectDishSalesByPurchaseMethod = "select name, online_sales from orderOverview, order_dish, dish where orderOverview.order_id = order_dish.order_id and dish.dish_id = order_dish.dish_id and dish.dish_id = "+
+                        dish.getDishId()+" and orderOverview.order_time >= DATE_SUB(NOW(), INTERVAL "+time+") group by name;";
+                ResultSet resultSet = statement.executeQuery(selectDishSalesByPurchaseMethod);
+                System.out.println(resultSet.getString("name")+" "+resultSet.getInt("online_sales"));
+            }
+            else if(purchaseMethod.equals("排队点餐")){
+                String selectDishSalesByPurchaseMethod = "select name, offline_sales from orderOverview, order_dish, dish where orderOverview.order_id = order_dish.order_id and dish.dish_id = order_dish.dish_id and dish.dish_id = "+
+                        dish.getDishId()+" and orderOverview.order_time >= DATE_SUB(NOW(), INTERVAL "+time+") group by name;";
+                ResultSet resultSet = statement.executeQuery(selectDishSalesByPurchaseMethod);
+                System.out.println(resultSet.getString("name")+" "+resultSet.getInt("offline_sales"));
+            }
         }
     }
 

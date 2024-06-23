@@ -184,7 +184,7 @@ public class ShoppingInSellerStageController {
         message.setSender_id(purchaser.getId());
         message.setReceiver_id(seller.getId());
         message.setMessage("您有新订单了！ 来自"+purchaser.getName()+"的订单");
-        sqlLoader.insertMessage(message);
+//        sqlLoader.insertMessage(message);
         // 提示信息
         Label label = new Label("支付成功！");
         StackPane root = new StackPane();
