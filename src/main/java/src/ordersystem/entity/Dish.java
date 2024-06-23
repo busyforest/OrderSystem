@@ -14,4 +14,6 @@ public class Dish {
     private String nutritionInfo;
     private String possibleAllergens;
     private float avg_mark;
+    private int online_sales_volume;
+    private int offline_sales_volume;
 }

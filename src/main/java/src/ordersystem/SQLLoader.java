@@ -440,6 +440,14 @@ public class SQLLoader {
             return 0;
         }
     }
+    public void checkDishPriceHistory(int dishId) throws SQLException {
+        String selectDishPriceHistory = "select * from dish_price_history where dish_id="+dishId;
+        ResultSet resultSet = statement.executeQuery(selectDishPriceHistory);
+        ArrayList<String> priceHistory = new ArrayList<>();
+        while(resultSet.next()){
+            priceHistory.add(resultSet.getString("price")+" "+resultSet.getTimestamp("time"));
+        }
+    }
 
 
 
