@@ -46,6 +46,8 @@ create table if not exists interact_seller(
     purchaser_id int,
     seller_id int,
     isFavorite boolean,
+    comment varchar(100),
+    mark int,
     primary key (purchaser_id, seller_id),
     foreign key (purchaser_id) references purchaser(id),
     foreign key (seller_id) references seller(id)
