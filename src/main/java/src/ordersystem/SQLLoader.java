@@ -187,11 +187,22 @@ public class SQLLoader {
         return sellers;
         //System.out.println(sellers);
     }
-
+    public void addAdministrator(Administrator administrator, String passwd) throws SQLException {
+        Statement statement1 =  connect.createStatement();
+        statement1.executeUpdate("insert into user(passwd, avatar_path) values (\""+passwd+"\",\""+administrator.getAvatarPath()+"\");");
+        statement.executeUpdate("insert into administrator VALUES(LAST_INSERT_ID(), \""+administrator.getName()+"\")");
+    }
     //管理员的功能
     //管理商家
-    public void addSeller(Seller seller) throws SQLException {
-        statement.executeUpdate("insert into seller(id,address,brief_information,featured_dish) values("+seller.getId()+",'"+seller.getAddress()+"','"+seller.getBriefInfomation()+"','"+seller.getFeaturedDish()+"')");
+    public void addSeller(Seller seller, String passwd) throws SQLException {
+        Statement statement1 =  connect.createStatement();
+        Statement statement2 = connect.createStatement();
+        statement1.executeUpdate("insert into user(passwd, avatar_path) values (\""+passwd+"\",\""+seller.getAvatarPath()+"\");");
+        ResultSet resultSet = statement2.executeQuery("select LAST_INSERT_ID()");
+        if(resultSet.next()) {
+            seller.setId(resultSet.getInt(1));
+        }
+        statement.executeUpdate("insert into seller values(LAST_INSERT_ID(), \""+ seller.getName()+"\", \""+seller.getBriefInfomation()+"\", \""+ seller.getAddress()+"\", \""+seller.getFeaturedDish()+"\", null)" );
     }
     public void deleteSeller(int id) throws SQLException {
         statement.executeUpdate("delete from seller where id="+id);
@@ -200,8 +211,15 @@ public class SQLLoader {
         statement.executeUpdate("update seller set name = \""+ seller.getName()+"\" ,brief_information = \""+seller.getBriefInfomation()+"\" ,address = \""+ seller.getAddress()+ "\" ,featured_dish = \""+seller.getFeaturedDish()+"\" ,avg_mark = "+ seller.getAvg_mark()+" where id = "+ seller.getId());
     }
     //管理顾客
-    public void addPurchaser(Purchaser purchaser) throws SQLException {
-        statement.executeUpdate("insert into purchaser(id,gender,studentIDOrWorkID) values("+purchaser.getId()+",'"+purchaser.getGender()+"',"+purchaser.getStudentIDOrWorkID()+")");
+    public void addPurchaser(Purchaser purchaser , String passwd) throws SQLException {
+        Statement statement1 =  connect.createStatement();
+        Statement statement2 = connect.createStatement();
+        statement1.executeUpdate("insert into user(passwd, avatar_path) values (\""+passwd+"\",\""+purchaser.getAvatarPath()+"\");");
+        ResultSet resultSet = statement2.executeQuery("select LAST_INSERT_ID()");
+        if(resultSet.next()) {
+            purchaser.setId(resultSet.getInt(1));
+        }
+        statement.executeUpdate("insert into purchaser values(LAST_INSERT_ID(), \""+purchaser.getName()+"\", \""+purchaser.getGender()+"\", "+purchaser.getStudentIDOrWorkID()+")");
     }
     public void deletePurchaser(int id) throws SQLException {
         statement.executeUpdate("delete from purchaser where id="+id);

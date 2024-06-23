@@ -1,7 +1,7 @@
 create table if not exists User(
     id int auto_increment,
     passwd varchar(20),
-    avatar_path varchar(50),
+    avatar_path varchar(150),
     primary key (id)
 );
 
