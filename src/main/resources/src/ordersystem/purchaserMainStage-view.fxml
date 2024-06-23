@@ -47,7 +47,7 @@
                   <Font name="Algerian" size="21.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的消息">
+            <Button mnemonicParsing="false" prefHeight="109.0" prefWidth="271.0" text="我的消息" fx:id="messageButton" onAction="#handleMessageClick">
                <font>
                   <Font name="Algerian" size="21.0" />
                </font>

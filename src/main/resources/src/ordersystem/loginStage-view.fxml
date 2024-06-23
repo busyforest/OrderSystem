@@ -33,7 +33,7 @@
             <Font name="Comic Sans MS" size="23.0" />
          </font></Button>
       <PasswordField fx:id="passwdField" layoutX="247.0" layoutY="232.0" prefHeight="49.0" prefWidth="285.0" />
-      <Button fx:id="loginButton1" layoutX="178.0" layoutY="337.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="49.0" prefWidth="110.0" text="注册">
+      <Button fx:id="signUpButton" layoutX="178.0" layoutY="337.0" mnemonicParsing="false" onAction="#handleSignUpClick" prefHeight="49.0" prefWidth="110.0" text="注册">
          <font>
             <Font name="Comic Sans MS" size="23.0" />
          </font>
