@@ -25,7 +25,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -459,6 +459,8 @@ public class SQLLoader {
             dish.setNutritionInfo(resultSet.getString("nutrition_information"));
             dish.setPossibleAllergens(resultSet.getString("possible_allergens"));
             dish.setAvg_mark(resultSet.getFloat("avg_mark"));
+            dish.setOnline_sales_volume(resultSet.getInt("online_sales_volume"));
+            dish.setOffline_sales_volume(resultSet.getInt("offline_sales_volume"));
             dishes.add(dish);
         }
         return dishes;
@@ -599,6 +601,8 @@ public class SQLLoader {
             dish.setNutritionInfo(resultSet.getString("nutrition_information"));
             dish.setPossibleAllergens(resultSet.getString("possible_allergens"));
             dish.setAvg_mark(resultSet.getFloat("avg_mark"));
+            dish.setOnline_sales_volume(resultSet.getInt("online_sales_volume"));
+            dish.setOffline_sales_volume(resultSet.getInt("offline_sales_volume"));
             dishes.add(dish);
         }
         return dishes;
@@ -621,7 +625,7 @@ public class SQLLoader {
     }
     //查询某个商户某个菜品的收藏量，显示在菜品的具体信息里面
     public int getFavoriteNum(int dishId) throws SQLException {
-        String selectFavoriteNum = "select count(*) from interact_dish where dish_id="+dishId+" and isFavorite='true'";
+        String selectFavoriteNum = "select count(*) from interact_dish where dish_id="+dishId+" and isFavorite = true";
         ResultSet resultSet = statement.executeQuery(selectFavoriteNum);
         if(resultSet.next()){
             return resultSet.getInt(1);
@@ -630,31 +634,63 @@ public class SQLLoader {
         }
     }
     //查询某个菜品的价格历史
-    public void checkDishPriceHistory(int dishId) throws SQLException {
+    public ArrayList<String> checkDishPriceHistory(int dishId) throws SQLException {
         String selectDishPriceHistory = "select * from dish_price_history where dish_id="+dishId;
         ResultSet resultSet = statement.executeQuery(selectDishPriceHistory);
         ArrayList<String> priceHistory = new ArrayList<>();
         while(resultSet.next()){
             priceHistory.add(resultSet.getString("price")+" "+resultSet.getTimestamp("time"));
         }
+        return priceHistory;
     }
     //菜品在一段时间（近一周，近一月，近一年）内不同点餐方式的销量可进行筛选
-    public void checkDishSalesByPurchaseMethod(ArrayList<Dish> dishes, String purchaseMethod, String time) throws SQLException {
-        for (Dish dish : dishes) {
-            int dish_id = dishes.get(0).getDishId();
+    public ArrayList<Dish> checkDishSalesByPurchaseMethod(ArrayList<Dish> dishes, String purchaseMethod, String time) throws SQLException {
+        ArrayList<Dish> newDishes = new ArrayList<>();
+        for (Dish dish1 : dishes) {
             if(purchaseMethod.equals("在线点餐")){
-                String selectDishSalesByPurchaseMethod = "select name, online_sales from orderOverview, order_dish, dish where orderOverview.order_id = order_dish.order_id and dish.dish_id = order_dish.dish_id and dish.dish_id = "+
-                        dish.getDishId()+" and orderOverview.order_time >= DATE_SUB(NOW(), INTERVAL "+time+") group by name;";
+                String selectDishSalesByPurchaseMethod = "select dish.* from orderOverview, order_dish, dish where orderOverview.order_id = order_dish.order_id and dish.dish_id = order_dish.dish_id and order_dish.purchase_method = \"在线点餐\" and dish.dish_id = "+
+                        dish1.getDishId()+" and orderOverview.order_time >= DATE_SUB(NOW(), INTERVAL "+time+") group by name;";
                 ResultSet resultSet = statement.executeQuery(selectDishSalesByPurchaseMethod);
-                System.out.println(resultSet.getString("name")+" "+resultSet.getInt("online_sales"));
+                if(resultSet.next()) {
+                    Dish dish = new Dish();
+                    dish.setDishId(resultSet.getInt("dish.dish_id"));
+                    dish.setSellerId(resultSet.getInt("dish.seller_id"));
+                    dish.setDishName(resultSet.getString("dish.name"));
+                    dish.setDishPrice(resultSet.getInt("dish.price"));
+                    dish.setDishPictureUrl(resultSet.getString("dish.picture"));
+                    dish.setDishDescription(resultSet.getString("dish.description"));
+                    dish.setIngredients(resultSet.getString("dish.ingredients"));
+                    dish.setNutritionInfo(resultSet.getString("dish.nutrition_information"));
+                    dish.setPossibleAllergens(resultSet.getString("dish.possible_allergens"));
+                    dish.setAvg_mark(resultSet.getFloat("dish.avg_mark"));
+                    dish.setOnline_sales_volume(resultSet.getInt("dish.online_sales_volume"));
+                    dish.setOffline_sales_volume(resultSet.getInt("dish.offline_sales_volume"));
+                    newDishes.add(dish);
+                }
             }
             else if(purchaseMethod.equals("排队点餐")){
-                String selectDishSalesByPurchaseMethod = "select name, offline_sales from orderOverview, order_dish, dish where orderOverview.order_id = order_dish.order_id and dish.dish_id = order_dish.dish_id and dish.dish_id = "+
-                        dish.getDishId()+" and orderOverview.order_time >= DATE_SUB(NOW(), INTERVAL "+time+") group by name;";
+                String selectDishSalesByPurchaseMethod = "select dish.* from orderOverview, order_dish, dish where orderOverview.order_id = order_dish.order_id and dish.dish_id = order_dish.dish_id  and order_dish.purchase_method = \"排队点餐\" and dish.dish_id = "+
+                        dish1.getDishId()+" and orderOverview.order_time >= DATE_SUB(NOW(), INTERVAL "+time+") group by name;";
                 ResultSet resultSet = statement.executeQuery(selectDishSalesByPurchaseMethod);
-                System.out.println(resultSet.getString("name")+" "+resultSet.getInt("offline_sales"));
+                if(resultSet.next()) {
+                    Dish dish = new Dish();
+                    dish.setDishId(resultSet.getInt("dish.dish_id"));
+                    dish.setSellerId(resultSet.getInt("dish.seller_id"));
+                    dish.setDishName(resultSet.getString("dish.name"));
+                    dish.setDishPrice(resultSet.getInt("dish.price"));
+                    dish.setDishPictureUrl(resultSet.getString("dish.picture"));
+                    dish.setDishDescription(resultSet.getString("dish.description"));
+                    dish.setIngredients(resultSet.getString("dish.ingredients"));
+                    dish.setNutritionInfo(resultSet.getString("dish.nutrition_information"));
+                    dish.setPossibleAllergens(resultSet.getString("dish.possible_allergens"));
+                    dish.setAvg_mark(resultSet.getFloat("dish.avg_mark"));
+                    dish.setOnline_sales_volume(resultSet.getInt("dish.online_sales_volume"));
+                    dish.setOffline_sales_volume(resultSet.getInt("dish.offline_sales_volume"));
+                    newDishes.add(dish);
+                }
             }
         }
+        return newDishes;
     }
     //获取购买某个菜品最多的人
     public String getDishBuyer(int dishId) throws SQLException {
