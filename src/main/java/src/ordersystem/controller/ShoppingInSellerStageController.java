@@ -187,14 +187,25 @@ public class ShoppingInSellerStageController {
     public void handlePaying() throws SQLException {
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
-        sqlLoader.purchaseDishList(this.purchaser.getId(), cartList, (String) comboBox.getValue());
-        Message message = new Message();
-        message.setSender_id(purchaser.getId());
-        message.setReceiver_id(seller.getId());
-        message.setMessage("您有新订单了！ 来自"+purchaser.getName()+"的订单");
-//        sqlLoader.insertMessage(message);
+        boolean isSuccess = sqlLoader.purchaseDishList(this.purchaser.getId(), cartList, (String) comboBox.getValue());
+        Label label;
         // 提示信息
-        Label label = new Label("支付成功！");
+        if(isSuccess){
+            Message message = new Message();
+            Message message1 = new Message();
+            message.setSender_id(purchaser.getId());
+            message.setReceiver_id(seller.getId());
+            message.setMessage("您有新订单了！ 来自"+purchaser.getName()+"的订单");
+            message1.setSender_id(seller.getId());
+            message1.setReceiver_id(purchaser.getId());
+            message1.setMessage("您的订单已提交");
+            sqlLoader.insertMessage(message1);
+            sqlLoader.insertMessage(message);
+            label = new Label("支付成功！");
+        }
+        else{
+            label = new Label("购物车为空或者支付失败!");
+        }
         StackPane root = new StackPane();
         root.getChildren().add(label);
         Stage primaryStage = new Stage();
