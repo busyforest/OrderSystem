@@ -696,9 +696,13 @@ public class SQLLoader {
     }
     //获取购买某个菜品最多的人
     public String getDishBuyer(int dishId) throws SQLException {
-        String selectDishBuyer = "select purchaser_id, sum(quantity) as num from order_dish, orderOverview where dish_id=" + dishId + " group by purchaser_id order by num desc limit 1";
+        String selectDishBuyer = "select purchaser_id, sum(quantity) as num from order_dish, orderOverview where order_dish.dish_id=" + dishId + " and orderOverview.order_id = order_dish.order_id group by purchaser_id order by num desc limit 1";
         ResultSet resultSet = statement.executeQuery(selectDishBuyer);
-        return resultSet.getInt("purchaser_id")+"  购买次数："+resultSet.getInt("num");
+        if (resultSet.next()) {
+            return "购买者id: " + resultSet.getInt("purchaser_id") + "  购买次数：" + resultSet.getInt("num");
+        }else {
+            return "暂时没有顾客购买该菜品";
+        }
     }
 
     //某个商户的忠实粉丝在该商户的消费分布
@@ -712,7 +716,8 @@ public class SQLLoader {
             purchaser.setId(resultSet.getInt("id"));
             purchaser.setGender(resultSet.getString("gender").charAt(0));
             purchaser.setName(resultSet.getString("name"));
-            purchaser.setStudentIDOrWorkID(resultSet.getInt("student_id_or_work_id"));
+            purchaser.setStudentIDOrWorkID(resultSet.getInt("studentIDOrWorkID"));
+            purchasers.add(purchaser);
         }
         return purchasers;
     }

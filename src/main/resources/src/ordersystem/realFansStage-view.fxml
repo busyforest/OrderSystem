@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Pagination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.RealFansStageController">
+   <children>
+      <Label layoutX="26.0" layoutY="21.0" prefHeight="34.0" prefWidth="134.0" text="忠实用户">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Pagination layoutX="44.0" layoutY="71.0" prefHeight="295.0" prefWidth="493.0" fx:id="pagination"/>
+   </children>
+</AnchorPane>

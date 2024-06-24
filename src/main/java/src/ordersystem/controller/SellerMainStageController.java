@@ -118,7 +118,26 @@ public class SellerMainStageController {
 
         Button changeButton = new Button("修改信息");
         Button deleteButton = new Button("删除菜品");
+        Button getFanButton = new Button("购买最多者");
+        getFanButton.setOnAction(e ->{
+            try {
 
+            SQLLoader sqlLoader = new SQLLoader();
+            sqlLoader.connect();
+            String s = sqlLoader.getDishBuyer(dishes.get(index).getDishId());
+
+            // 提示信息
+            Label label = new Label(s);
+            StackPane root = new StackPane();
+            root.getChildren().add(label);
+            Stage primaryStage = new Stage();
+            Scene scene = new Scene(root, 250, 150);
+            primaryStage.setScene(scene);
+            primaryStage.show();
+            }catch (SQLException ex){
+                throw new RuntimeException(ex);
+            }
+        });
         changeButton.setOnAction(e ->{
             try {
                 handleChangeClick(dishes.get(index));
@@ -161,7 +180,7 @@ public class SellerMainStageController {
         VBox vbox = new VBox();
         vbox.getChildren().addAll(label1);
         VBox vbox1 = new VBox();
-        vbox1.getChildren().addAll(changeButton,new Label(),deleteButton);
+        vbox1.getChildren().addAll(changeButton,deleteButton,getFanButton);
 
 
         hbox.getChildren().addAll(imageView, new Label(), vbox,new Label(),new Label(), new Label(),vbox1);
