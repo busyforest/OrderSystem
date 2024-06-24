@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import src.ordersystem.MainApplication;
@@ -38,11 +39,17 @@ public class ShoppingInSellerStageController {
     @FXML
     public Pagination dishCartPagination;
     @FXML
+    public ComboBox methodBox;
+    @FXML
+    public ComboBox timeBox;
+    @FXML
     public Label priceLabel;
     @FXML
     public Button payButton;
     @FXML
     public Button searchButton;
+    @FXML
+    public Button chooseButton;
     @FXML
     public ComboBox comboBox;
     @FXML
@@ -62,8 +69,18 @@ public class ShoppingInSellerStageController {
                         "在线点餐",
                         "排队点餐"
                 );
+        ObservableList<String> options1 =
+                FXCollections.observableArrayList(
+                        "1 week",
+                        "1 month",
+                        "1 year"
+                );
         comboBox.setItems(options);
+        methodBox.setItems(options);
+        timeBox.setItems(options1);
         comboBox.setValue("在线点餐");
+        methodBox.setValue("在线点餐");
+        timeBox.setValue("1 week");
         cartList = new ArrayList<>();
         exLabel.setText(purchaser.getName()+", 你进入了商家："+seller.getName());
         this.seller = seller;
@@ -107,15 +124,28 @@ public class ShoppingInSellerStageController {
         imageView.setFitWidth(100);
 
         Label label1 = new Label(dishes.get(index).getDishName());
-        label1.setFont(new javafx.scene.text.Font(20));
+        label1.setFont(new Font(20));
 
         Label label2 = new Label("菜品简介：" + dishes.get(index).getDishDescription());
-        label2.setFont(new javafx.scene.text.Font(15));
+        label2.setFont(new Font(15));
+        Label label3 = new Label("评分："+dishes.get(index).getAvg_mark());
+        Label label6 = null;
+        Label label4 = new Label("在线销量："+ dishes.get(index).getOnline_sales_volume());
+        Label label5 = new Label("线下销量："+ dishes.get(index).getOffline_sales_volume());
         Button button = new Button("添加到购物车");
+        Button button1 = new Button("查看历史价格");
+        try {
+            SQLLoader sqlLoader = new SQLLoader();
+            sqlLoader.connect();
+            int i = sqlLoader.getFavoriteNum(dishes.get(index).getDishId());
+            label6 = new Label("收藏量：" + i);
+        }catch (SQLException e){
+
+        }
         VBox vbox = new VBox();
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(new Label(),button);
-        vbox.getChildren().addAll(label1, label2);
+        vBox.getChildren().addAll(new Label(),button,new Label(),button1);
+        vbox.getChildren().addAll(label1, label2,label3,label6,label4,label5);
         hbox.getChildren().addAll(imageView, new Label(), vbox,new Label(),new Label(),new Label(),vBox);
         button.setOnMouseClicked(event -> {
             try {
@@ -124,6 +154,28 @@ public class ShoppingInSellerStageController {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        });
+        button1.setOnAction(e->{
+            try{
+                ArrayList<String> history = new ArrayList<>();
+                SQLLoader sqlLoader = new SQLLoader();
+                sqlLoader.connect();
+                history = sqlLoader.checkDishPriceHistory(dishes.get(index).getDishId());
+                StringBuilder stringBuilder = new StringBuilder();
+                for(String s:history){
+                    stringBuilder.append(s+"\n");
+                }
+                // 提示信息
+                Label label = new Label(stringBuilder.toString());
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 500, 300);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+            }catch (SQLException ex){
+
             }
         });
         hbox.setSpacing(10);
@@ -173,10 +225,10 @@ public class ShoppingInSellerStageController {
         imageView.setFitWidth(100);
 
         Label label1 = new Label(cartList.get(index).getDishName());
-        label1.setFont(new javafx.scene.text.Font(20));
+        label1.setFont(new Font(20));
 
         Label label2 = new Label("价格：" + cartList.get(index).getDishPrice());
-        label2.setFont(new javafx.scene.text.Font(15));
+        label2.setFont(new Font(15));
         VBox vbox = new VBox();
         vbox.getChildren().addAll(label1, label2);
         hbox.getChildren().addAll(imageView, new Label(), vbox,new Label(),new Label(),new Label());
@@ -254,6 +306,20 @@ public class ShoppingInSellerStageController {
         dishDetailInformationStageController.init(dish);
         stage.setScene(scene);
         stage.show();
+
+    }
+    @FXML
+    protected void handleChooseClick() throws SQLException {
+        pagination.setPageFactory(null);
+        pagination.setPageCount(0);
+        resultDishes = new ArrayList<>();
+        SQLLoader sqlLoader = new SQLLoader();
+        sqlLoader.connect();
+        resultDishes = sqlLoader.checkDishSalesByPurchaseMethod(dishes, (String) methodBox.getValue(), (String) timeBox.getValue());
+        totalItems = resultDishes.size();
+        int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+        pagination.setPageCount(pageCount);
+        pagination.setPageFactory(this::createSearchPage);
 
     }
 }
