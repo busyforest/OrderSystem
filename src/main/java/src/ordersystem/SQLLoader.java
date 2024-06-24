@@ -6,10 +6,7 @@ import src.ordersystem.entity.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 public class SQLLoader {
     Driver driver;
@@ -28,7 +25,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -39,33 +36,28 @@ public class SQLLoader {
     public  void init(){
         run("src/main/SQLStatements/init.sql");
         try {
-            statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS SEND_MESSAGE_AFTER_PURCHASE\n" +
-                    "AFTER INSERT ON orderOverview\n" +
-                    "FOR EACH ROW\n" +
-                    "BEGIN\n" +
-                    "    INSERT INTO message VALUES (NEW.purchaser_id, 1, '有新的订单需要处理', NOW());\n" +
-                    "    INSERT INTO message VALUES (1, NEW.purchaser_id, '您的订单已提交，请耐心等待', NOW());\n"+
-                    "END;");
             statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS SEND_MESSAGE_AFTER_UPDATE_STATUS\n" +
                     "AFTER UPDATE ON orderOverview\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
-                    "    IF NEW.dish_status = '已发货' THEN\n" +
-                    "        INSERT INTO message VALUES ((select distinct seller_id from dish where dish_id = (select dish_id from order_dish where order_id = NEW.order_id limit 1)), NEW.purchaser_id, '您的订单已发货，请注意查收', NOW());\n" +
+                    "    IF NEW.dish_status = '制作中' THEN\n"+
+                    "        INSERT INTO message VALUES ((select distinct seller_id from dish where dish_id = (select dish_id from order_dish where order_id = NEW.order_id limit 1)),NEW.purchaser_id, '您点的菜品正在制作中，请耐心等待', NOW());\n" +
                     "    END IF;\n" +
-                    "END;");
-            statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_SELLER_ID\n" +
-                    "AFTER INSERT ON order_dish\n"+
-                    "FOR EACH ROW\n" +
-                    "BEGIN\n" +
-                    "    UPDATE message set receiver_id = (select seller_id from dish where dish_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.sender_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n" +
-                    "    UPDATE message set sender_id = (select seller_id from dish where dish_id = NEW.dish_id) where message.message_time=(select order_time from orderOverview where order_id = NEW.order_id) and message.receiver_id = (select purchaser_id from orderOverview where order_id = NEW.order_id);\n"+
+                    "    IF NEW.dish_status = '已出餐' THEN\n" +
+                    "        INSERT INTO message VALUES ((select distinct seller_id from dish where dish_id = (select dish_id from order_dish where order_id = NEW.order_id limit 1)), NEW.purchaser_id, '您的订单已出餐，请及时取餐', NOW());\n" +
+                    "    END IF;\n" +
                     "END;");
             statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_DISH_AVG_MARK\n" +
                     "AFTER UPDATE ON order_dish\n" +
                     "FOR EACH ROW\n" +
                     "BEGIN\n" +
                     "    UPDATE dish set avg_mark = (select AVG(mark) from order_dish where dish_id = NEW.dish_id) where dish_id = NEW.dish_id;\n" +
+                    "END;");
+            statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_SELLER_AVG_MARK\n" +
+                    "AFTER UPDATE ON interact_seller\n" +
+                    "FOR EACH ROW\n" +
+                    "BEGIN\n" +
+                    "    UPDATE seller set avg_mark = (select AVG(mark) from interact_seller where seller_id = NEW.seller_id) where id = NEW.seller_id;\n" +
                     "END;");
             statement.executeUpdate("CREATE TRIGGER IF NOT EXISTS UPDATE_DISH_SALES_VOLUME\n"+
                     "AFTER INSERT ON order_dish\n" +
@@ -259,9 +251,9 @@ public class SQLLoader {
         String checkIfExist = "select * from interact_seller where purchaser_id="+userId+" and seller_id="+sellerId;
         ResultSet resultSet = statement.executeQuery(checkIfExist);
         if(resultSet.next()){
-            statement.executeUpdate("update interact_seller set isFavorite = "+ !resultSet.getBoolean("isFavorite")+" where purchaser_id="+userId+" and seller_id="+sellerId);
+            statement.executeUpdate("update interact_seller set isFavorite = "+ !resultSet.getBoolean("isFavorite")+" where purchaser_id="+userId+" and seller_id="+sellerId+";");
         }else {
-            statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,isFavorite) values(" + userId + "," + sellerId + ",'','true')");
+            statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,isFavorite) values(" + userId + "," + sellerId + ",null,true);");
         }
     }
     //检查是否收藏过卖家
@@ -302,9 +294,10 @@ public class SQLLoader {
         String checkIfExist = "select * from interact_seller where purchaser_id="+userId+" and seller_id="+sellerId;
         ResultSet resultSet = statement.executeQuery(checkIfExist);
         if(resultSet.next()){
-            statement.executeUpdate("update interact_seller set comment='"+comment+"', mark="+mark+" where purchaser_id="+userId+" and seller_id="+sellerId);
+            statement.executeUpdate("update interact_seller set comment='"+comment+"', mark="+mark+" where purchaser_id="+userId+" and seller_id="+sellerId+";");
         }else {
             statement.executeUpdate("insert into interact_seller(purchaser_id,seller_id,comment,mark,isFavorite) values(" + userId + "," + sellerId + ",'" + comment + "',"+mark+",false)");
+            statement.executeUpdate("update interact_seller set comment='"+comment+"', mark="+mark+" where purchaser_id="+userId+" and seller_id="+sellerId+";");
         }
     }
 
@@ -381,17 +374,31 @@ public class SQLLoader {
         }
         return messages;
     }
-
     // 发送消息
-//    public void insertMessage(Message message) throws SQLException {
-//        statement.executeUpdate("insert into message(sender_id, receiver_id, message, message_time) values (" + message.getSender_id()+", " +message.getReceiver_id()+", \"" + message.getMessage()+"\" , now())");
-//    }
+    public void insertMessage(Message message) throws SQLException {
+        statement.executeUpdate("insert into message(sender_id, receiver_id, message, message_time) values (" + message.getSender_id()+", " +message.getReceiver_id()+", \"" + message.getMessage()+"\" , now())");
+    }
+
     //买家购买菜品
-    public void purchaseDishList(int purchaserId, ArrayList<Dish> dishes, String purchaseMethod) throws SQLException {
+    public boolean purchaseDishList(int purchaserId, ArrayList<Dish> dishes, String purchaseMethod) throws SQLException {
+        connect.setAutoCommit(false);
         HashMap<Dish, Integer> dishNum = getDishNum(dishes);
-        statement.executeUpdate("insert into orderOverview(purchaser_id, order_time, dish_status) values (" + purchaserId + ", now(), \"已支付\");");
-        for(HashMap.Entry <Dish, Integer>  entry : dishNum.entrySet()){
-            statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + entry.getKey().getDishId() +","+entry.getValue()+",'"+purchaseMethod+"', null, null);");
+        try {
+            statement.executeUpdate("insert into orderOverview(purchaser_id, order_time, dish_status) values (" + purchaserId + ", now(), \"已支付\");");
+            if(dishNum.size() == 0){
+                throw new Exception("购物车为空");
+            }
+            for(HashMap.Entry <Dish, Integer>  entry : dishNum.entrySet()){
+                statement.executeUpdate("insert into order_dish values((select max(order_id) from orderOverview where purchaser_id = " + purchaserId + ")," + entry.getKey().getDishId() +","+entry.getValue()+",'"+purchaseMethod+"', null, null);");
+            }
+            connect.commit();
+            connect.setAutoCommit(true);
+            return true;
+        }
+        catch (Exception e){
+            connect.rollback();
+            connect.setAutoCommit(true);
+            return false;
         }
     }
     public HashMap getDishNum(ArrayList list){
@@ -649,14 +656,137 @@ public class SQLLoader {
             }
         }
     }
+    //获取购买某个菜品最多的人
+    public String getDishBuyer(int dishId) throws SQLException {
+        String selectDishBuyer = "select purchaser_id, sum(quantity) as num from order_dish, orderOverview where dish_id=" + dishId + " group by purchaser_id order by num desc limit 1";
+        ResultSet resultSet = statement.executeQuery(selectDishBuyer);
+        return resultSet.getInt("purchaser_id")+"  购买次数："+resultSet.getInt("num");
+    }
 
+    //某个商户的忠实粉丝在该商户的消费分布
+    //先获取忠实粉丝
+    public ArrayList<Purchaser> getReallyFollowers(int sellerId) throws SQLException {
+        String selectReallyFollowers = "select * from purchaser where id in (select purchaser_id from orderOverview, order_dish, dish where dish.dish_id = order_dish.dish_id and orderOverview.order_id = order_dish.order_id and dish.seller_id = "+sellerId+" group by purchaser_id having sum(quantity) >= 5)";
+        ResultSet resultSet = statement.executeQuery(selectReallyFollowers);
+        ArrayList<Purchaser> purchasers = new ArrayList<>();
+        while(resultSet.next()){
+            Purchaser purchaser = new Purchaser();
+            purchaser.setId(resultSet.getInt("id"));
+            purchaser.setGender(resultSet.getString("gender").charAt(0));
+            purchaser.setName(resultSet.getString("name"));
+            purchaser.setStudentIDOrWorkID(resultSet.getInt("student_id_or_work_id"));
+        }
+        return purchasers;
+    }
+    //点击后显示该忠实粉丝的消费分布
+    public ArrayList<String> showReallyFollowerConsumptionDistribution(int purchaserId, int sellerId) throws SQLException {
+        String selectReallyFollowerConsumptionDistribution = "select name, sum(quantity) as num from order_dish, orderOverview, dish where purchaser_id = "+purchaserId+" and orderOverview.order_id = order_dish.order_id and dish.dish_id = order_dish.dish_id and dish.seller_id = "+sellerId+" group by name";
+        ResultSet resultSet = statement.executeQuery(selectReallyFollowerConsumptionDistribution);
+        ArrayList<String> consumptionDistribution = new ArrayList<>();
+        while(resultSet.next()){
+            String dishName = resultSet.getString("name");
+            int num = resultSet.getInt("num");
+            consumptionDistribution.add(dishName+" 购买次数："+num);
+        }
+        return consumptionDistribution;
+    }
+
+    //分析用户的活跃度模式，包括每周、每月点餐频率的变化趋势，以及用户在不同时间段的活跃程度
+    public void analyzeUserActivityPattern(int purchaserId) throws SQLException {
+        // 获取每周点餐频率
+        Map<Integer, Integer> weeklyActivity = getWeeklyActivity(connect, purchaserId);
+        System.out.println("Weekly Activity: " + weeklyActivity);
+
+        // 获取每月点餐频率
+        Map<Integer, Integer> monthlyActivity = getMonthlyActivity(connect, purchaserId);
+        System.out.println("Monthly Activity: " + monthlyActivity);
+
+        // 获取不同时间段的活跃程度
+        Map<String, Integer> timePeriodActivity = getTimePeriodActivity(connect, purchaserId);
+        System.out.println("Time Period Activity: " + timePeriodActivity);
+    }
+    private static Map<Integer, Integer> getWeeklyActivity(Connection connection, int customerId) throws SQLException {
+        Map<Integer, Integer> weeklyActivity = new HashMap<>();
+
+        String sql = "SELECT WEEK(order_time) AS week, COUNT(*) AS order_count " +
+                "FROM orderOverview WHERE purchaser_id = ? AND order_time >= DATE_SUB(NOW(), INTERVAL 1 YEAR) " +
+                "GROUP BY WEEK(order_time)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int week = rs.getInt("week");
+                int orderCount = rs.getInt("order_count");
+                weeklyActivity.put(week, orderCount);
+            }
+        }
+
+        return weeklyActivity;
+    }
+    private static Map<Integer, Integer> getMonthlyActivity(Connection connection, int customerId) throws SQLException {
+        Map<Integer, Integer> monthlyActivity = new HashMap<>();
+
+        String sql = "SELECT MONTH(order_time) AS month, COUNT(*) AS order_count " +
+                "FROM orderOverview WHERE purchaser_id = ? AND order_time >= DATE_SUB(NOW(), INTERVAL 1 YEAR) " +
+                "GROUP BY MONTH(order_time)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int month = rs.getInt("month");
+                int orderCount = rs.getInt("order_count");
+                monthlyActivity.put(month, orderCount);
+            }
+        }
+
+        return monthlyActivity;
+    }
+    private static Map<String, Integer> getTimePeriodActivity(Connection connection, int customerId) throws SQLException {
+        Map<String, Integer> timePeriodActivity = new HashMap<>();
+
+        String sql = "SELECT HOUR(order_time) AS hour, COUNT(*) AS order_count " +
+                "FROM orderOverview WHERE purchaser_id = ? AND order_time >= DATE_SUB(NOW(), INTERVAL 1 YEAR) " +
+                "GROUP BY HOUR(order_time)";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, customerId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int hour = rs.getInt("hour");
+                int orderCount = rs.getInt("order_count");
+                String period = getTimePeriod(hour);
+                timePeriodActivity.put(period, timePeriodActivity.getOrDefault(period, 0) + orderCount);
+            }
+        }
+
+        return timePeriodActivity;
+    }
+    private static String getTimePeriod(int hour) {
+        if (hour >= 6 && hour < 12) {
+            return "Morning";
+        } else if (hour >= 12 && hour < 18) {
+            return "Afternoon";
+        } else if (hour >= 18 && hour < 24) {
+            return "Evening";
+        } else {
+            return "Night";
+        }
+    }
 
 
     public static void main(String[] args) throws SQLException {
         SQLLoader sqlLoader = new SQLLoader();
-        ArrayList<Seller> sellers = new ArrayList<>();
+//        ArrayList<Seller> sellers = new ArrayList<>();
         sqlLoader.connect();
-        sellers = sqlLoader.getAllSellers();
-        System.out.println(sqlLoader.getDishesInSeller(sellers.get(2)));
+//        sellers = sqlLoader.getAllSellers();
+//        System.out.println(sqlLoader.getDishesInSeller(sellers.get(2)));
+        int purchaser_id = 2;
+        System.out.println(sqlLoader.showReallyFollowerConsumptionDistribution(2, 100001));
+        sqlLoader.analyzeUserActivityPattern(purchaser_id);
     }
 }
