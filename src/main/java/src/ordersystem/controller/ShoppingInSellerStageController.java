@@ -133,6 +133,7 @@ public class ShoppingInSellerStageController {
         Label label4 = new Label("在线销量："+ dishes.get(index).getOnline_sales_volume());
         Label label5 = new Label("线下销量："+ dishes.get(index).getOffline_sales_volume());
         Button button = new Button("添加到购物车");
+        Button button1 = new Button("查看历史价格");
         try {
             SQLLoader sqlLoader = new SQLLoader();
             sqlLoader.connect();
@@ -143,7 +144,7 @@ public class ShoppingInSellerStageController {
         }
         VBox vbox = new VBox();
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(new Label(),button);
+        vBox.getChildren().addAll(new Label(),button,new Label(),button1);
         vbox.getChildren().addAll(label1, label2,label3,label6,label4,label5);
         hbox.getChildren().addAll(imageView, new Label(), vbox,new Label(),new Label(),new Label(),vBox);
         button.setOnMouseClicked(event -> {
@@ -153,6 +154,28 @@ public class ShoppingInSellerStageController {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            }
+        });
+        button1.setOnAction(e->{
+            try{
+                ArrayList<String> history = new ArrayList<>();
+                SQLLoader sqlLoader = new SQLLoader();
+                sqlLoader.connect();
+                history = sqlLoader.checkDishPriceHistory(dishes.get(index).getDishId());
+                StringBuilder stringBuilder = new StringBuilder();
+                for(String s:history){
+                    stringBuilder.append(s+"\n");
+                }
+                // 提示信息
+                Label label = new Label(stringBuilder.toString());
+                StackPane root = new StackPane();
+                root.getChildren().add(label);
+                Stage primaryStage = new Stage();
+                Scene scene = new Scene(root, 500, 300);
+                primaryStage.setScene(scene);
+                primaryStage.show();
+            }catch (SQLException ex){
+
             }
         });
         hbox.setSpacing(10);

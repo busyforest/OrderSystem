@@ -618,6 +618,8 @@ public class SQLLoader {
     //商家修改菜品信息
     public void updateDish(int dishId,String dishName,String dishDescription,double dishPrice,String dishPictureUrl,String ingredients,String nutritionInfo,String possibleAllergens) throws SQLException {
         statement.executeUpdate("update dish set name='"+dishName+"',description='"+dishDescription+"',price="+dishPrice+",picture='"+dishPictureUrl+"',ingredients='"+ingredients+"',nutrition_information='"+nutritionInfo+"',possible_allergens='"+possibleAllergens+"' where dish_id="+dishId);
+        Statement statement1 = connect.createStatement();
+        statement1.executeUpdate("insert into dish_price_history(dish_id, price, time_stamp) values(" + dishId+", "+dishPrice+", "+"now())");
     }
     //商家更新菜品状态
     public void updateDishStatus(int orderId, String dishStatus) throws SQLException {
@@ -639,7 +641,7 @@ public class SQLLoader {
         ResultSet resultSet = statement.executeQuery(selectDishPriceHistory);
         ArrayList<String> priceHistory = new ArrayList<>();
         while(resultSet.next()){
-            priceHistory.add(resultSet.getString("price")+" "+resultSet.getTimestamp("time"));
+            priceHistory.add("价格："+resultSet.getString("price")+" ,修改时间："+resultSet.getTimestamp("time_stamp"));
         }
         return priceHistory;
     }
