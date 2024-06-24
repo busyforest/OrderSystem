@@ -735,18 +735,20 @@ public class SQLLoader {
     }
 
     //分析用户的活跃度模式，包括每周、每月点餐频率的变化趋势，以及用户在不同时间段的活跃程度
-    public void analyzeUserActivityPattern(int purchaserId) throws SQLException {
+    public String  analyzeUserActivityPattern(int purchaserId) throws SQLException {
+        StringBuilder sb = new StringBuilder();
         // 获取每周点餐频率
         Map<Integer, Integer> weeklyActivity = getWeeklyActivity(connect, purchaserId);
-        System.out.println("Weekly Activity: " + weeklyActivity);
+        sb.append("Weekly Activity: " +weeklyActivity+"\n"+"\n");
 
         // 获取每月点餐频率
         Map<Integer, Integer> monthlyActivity = getMonthlyActivity(connect, purchaserId);
-        System.out.println("Monthly Activity: " + monthlyActivity);
+        sb.append("Monthly Activity: " + monthlyActivity+"\n"+"\n");
 
         // 获取不同时间段的活跃程度
         Map<String, Integer> timePeriodActivity = getTimePeriodActivity(connect, purchaserId);
-        System.out.println("Time Period Activity: " + timePeriodActivity);
+        sb.append("Time Period Activity: " + timePeriodActivity+"\n"+"\n");
+        return sb.toString();
     }
     private static Map<Integer, Integer> getWeeklyActivity(Connection connection, int customerId) throws SQLException {
         Map<Integer, Integer> weeklyActivity = new HashMap<>();
