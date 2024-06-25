@@ -45,7 +45,12 @@
             <Font size="21.0" />
          </font>
       </Label>
-      <Button fx:id="getFeatureButton" layoutX="430.0" layoutY="390.0" mnemonicParsing="false" onAction="#handleGetFeatureClick" prefHeight="38.0" prefWidth="175.0" text="分析用户">
+      <Button fx:id="getFeatureButton" layoutX="430.0" layoutY="390.0" mnemonicParsing="false" onAction="#handleGetFeatureClick" prefHeight="38.0" prefWidth="175.0" text="分析该用户">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Button>
+      <Button fx:id="getTotalFeatureButton" layoutX="430.0" layoutY="456.0" mnemonicParsing="false" onAction="#handleGetTotalFeatureClick" prefHeight="38.0" prefWidth="175.0" text="用户群体特征">
          <font>
             <Font size="15.0" />
          </font>

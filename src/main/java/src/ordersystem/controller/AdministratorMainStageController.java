@@ -27,7 +27,10 @@ public class AdministratorMainStageController {
     public TextField idField;
     @FXML
     public Button searchButton;
-    @FXML Button getFeatureButton;
+    @FXML
+    public Button getFeatureButton;
+    @FXML
+    public Button getTotalFeatureButton;
     public void init(User user){
         nameLabel.setText(user.getName());
     }
@@ -101,7 +104,20 @@ public class AdministratorMainStageController {
         Scene scene = new Scene(root, 400, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
-        PauseTransition delay = new PauseTransition(Duration.seconds(1));
     }
 
+    @FXML
+    protected void handleGetTotalFeatureClick() throws SQLException {
+        String s;
+        SQLLoader sqlLoader = new SQLLoader();
+        sqlLoader.connect();
+        s = sqlLoader.analyzeUserGroup();
+        Label label = new Label(s);
+        StackPane root = new StackPane();
+        root.getChildren().add(label);
+        Stage primaryStage = new Stage();
+        Scene scene = new Scene(root, 400, 300);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
 }
