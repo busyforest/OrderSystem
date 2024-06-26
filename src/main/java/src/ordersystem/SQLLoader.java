@@ -74,6 +74,7 @@ public class SQLLoader {
             statement.executeUpdate("CREATE INDEX idx_order_dish_order_id ON order_dish(order_id);");
             statement.executeUpdate("CREATE INDEX idx_order_dish_dish_id ON order_dish(dish_id);");
             statement.executeUpdate("CREATE INDEX idx_order_dish_purchaseMethod ON order_dish(purchase_method);");
+            statement.executeUpdate("CREATE INDEX idx_dish_dish_id ON dish(dish_id);");
         }
         catch (Exception e){
             e.printStackTrace();
