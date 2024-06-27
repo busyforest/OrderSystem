@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.ManagePurchaserStageController">
    <children>
       <Label layoutX="52.0" layoutY="53.0" prefHeight="30.0" prefWidth="82.0" text="用户ID：">
@@ -14,7 +13,7 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Label layoutX="126.0" layoutY="53.0" prefHeight="30.0" prefWidth="231.0" fx:id="idLabel">
+      <Label fx:id="idLabel" layoutX="126.0" layoutY="53.0" prefHeight="30.0" prefWidth="231.0">
          <font>
             <Font size="20.0" />
          </font>
@@ -24,28 +23,34 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="133.0" layoutY="109.0" prefHeight="30.0" prefWidth="135.0" fx:id="nameField" focusTraversable="false"/>
+      <TextField fx:id="nameField" focusTraversable="false" layoutX="133.0" layoutY="109.0" prefHeight="30.0" prefWidth="135.0" />
       <Label layoutX="70.0" layoutY="170.0" prefHeight="30.0" prefWidth="63.0" text="性别：">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="133.0" layoutY="170.0" prefHeight="30.0" prefWidth="135.0" fx:id="genderField" focusTraversable="false"/>
+      <TextField fx:id="genderField" focusTraversable="false" layoutX="133.0" layoutY="170.0" prefHeight="30.0" prefWidth="135.0" />
       <Label layoutX="41.0" layoutY="224.0" prefHeight="30.0" prefWidth="92.0" text="学/工号：">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField layoutX="135.0" layoutY="224.0" prefHeight="30.0" prefWidth="214.0" fx:id="studentIDField" focusTraversable="false"/>
-      <Button layoutX="245.0" layoutY="316.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="110.0" text="确认修改" fx:id="confirmButton" onAction="#handleConfirmClick">
+      <TextField fx:id="studentIDField" focusTraversable="false" layoutX="135.0" layoutY="224.0" prefHeight="30.0" prefWidth="214.0" />
+      <Button fx:id="confirmButton" layoutX="245.0" layoutY="316.0" mnemonicParsing="false" onAction="#handleConfirmClick" prefHeight="46.0" prefWidth="110.0" text="确认修改">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button layoutX="445.0" layoutY="45.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="110.0" text="删除用户" fx:id="deleteButton" onAction="#handleDeleteClick">
+      <Button fx:id="deleteButton" layoutX="445.0" layoutY="45.0" mnemonicParsing="false" onAction="#handleDeleteClick" prefHeight="46.0" prefWidth="110.0" text="删除用户">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
+      <Label layoutX="70.0" layoutY="269.0" prefHeight="30.0" prefWidth="63.0" text="年龄：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField fx:id="ageField" focusTraversable="false" layoutX="133.0" layoutY="269.0" prefHeight="30.0" prefWidth="135.0" />
    </children>
 </AnchorPane>

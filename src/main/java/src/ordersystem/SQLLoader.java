@@ -25,7 +25,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -130,6 +130,7 @@ public class SQLLoader {
             purchaser.setName(resultSet.getString("name"));
             purchaser.setGender(resultSet.getString("gender").charAt(0));
             purchaser.setStudentIDOrWorkID(resultSet.getInt("studentIDOrWorkID"));
+            purchaser.setAge(resultSet.getInt("age"));
             return purchaser;
         }
 
@@ -213,7 +214,7 @@ public class SQLLoader {
         if(resultSet.next()) {
             purchaser.setId(resultSet.getInt(1));
         }
-        statement.executeUpdate("insert into purchaser values(LAST_INSERT_ID(), \""+purchaser.getName()+"\", \""+purchaser.getGender()+"\", "+purchaser.getStudentIDOrWorkID()+")");
+        statement.executeUpdate("insert into purchaser values(LAST_INSERT_ID(), \""+purchaser.getName()+"\","+purchaser.getAge()+", \""+purchaser.getGender()+"\", "+purchaser.getStudentIDOrWorkID()+")");
     }
     public void deletePurchaser(int id) throws SQLException {
         statement.executeUpdate("delete from purchaser where id="+id);

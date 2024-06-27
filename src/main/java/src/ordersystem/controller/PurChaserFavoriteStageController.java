@@ -1,8 +1,11 @@
 package src.ordersystem.controller;
 
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Pagination;
 import javafx.scene.image.Image;
@@ -21,13 +24,34 @@ import java.util.ArrayList;
 public class PurChaserFavoriteStageController {
     @FXML
     public Pagination pagination;
+    @FXML
+    public ComboBox methodBox;
+    @FXML
+    public ComboBox timeBox;
+    @FXML
+    public Button chooseButton;
     public Purchaser purchaser;
     private ArrayList<Dish> dishes;
+    private ArrayList<Dish> resultDishes;
     private static final int ITEMS_PER_PAGE = 3;
     private int totalItems = 30;
-    private int totalCartItems = 0;
     @FXML
     public void init() throws SQLException {
+        ObservableList<String> options =
+                FXCollections.observableArrayList(
+                        "在线点餐",
+                        "排队点餐"
+                );
+        ObservableList<String> options1 =
+                FXCollections.observableArrayList(
+                        "1 week",
+                        "1 month",
+                        "1 year"
+                );
+        methodBox.setItems(options);
+        timeBox.setItems(options1);
+        methodBox.setValue("在线点餐");
+        timeBox.setValue("1 week");
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
         dishes = sqlLoader.getFavoriteDish(purchaser.getId());
@@ -69,6 +93,32 @@ public class PurChaserFavoriteStageController {
         hbox.setSpacing(10);
 
         return hbox;
+    }
+    @FXML
+    protected void handleChooseClick() throws SQLException {
+        pagination.setPageFactory(null);
+        pagination.setPageCount(0);
+        resultDishes = new ArrayList<>();
+        SQLLoader sqlLoader = new SQLLoader();
+        sqlLoader.connect();
+        resultDishes = sqlLoader.checkDishSalesByPurchaseMethod(dishes, (String) methodBox.getValue(), (String) timeBox.getValue());
+        totalItems = resultDishes.size();
+        int pageCount = (int) Math.ceil((double) totalItems / ITEMS_PER_PAGE);
+        pagination.setPageCount(pageCount);
+        pagination.setPageFactory(this::createSearchPage);
+
+    }
+    private VBox createSearchPage(int pageIndex) {
+        VBox box = new VBox(5);
+        int pageStart = pageIndex * ITEMS_PER_PAGE;
+        int pageEnd = Math.min(pageStart + ITEMS_PER_PAGE, totalItems);
+
+        for (int i = pageStart; i < pageEnd; i++) {
+            HBox hbox = createItemBox(i, resultDishes);
+            box.getChildren().add(hbox);
+        }
+
+        return box;
     }
 
 }

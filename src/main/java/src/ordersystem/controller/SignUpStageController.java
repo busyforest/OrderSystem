@@ -81,11 +81,16 @@ public class SignUpStageController {
         studentIDLabel.setFont(Font.font(20.0));
         TextField idField = new TextField();
         studentIDBox.getChildren().addAll(studentIDLabel, new Label(),idField);
+        HBox ageBox = new HBox();
+        Label ageLabel = new Label("年龄：");
+        studentIDLabel.setFont(Font.font(20.0));
+        TextField ageField = new TextField();
+        ageBox.getChildren().addAll(ageLabel,new Label(), ageField);
         Button confirmButton = new Button("确认注册");
         confirmButton.setFont(Font.font(20.0));
         confirmButton.setOnAction(e->{
             if(nickNameField.getText().isEmpty()||passwordField.getText().isEmpty()||confirmPasswordField.getText().isEmpty()||avatarField.getText().isEmpty()
-            || genderField.getText().isEmpty()||idField.getText().isEmpty()){
+            || genderField.getText().isEmpty()||idField.getText().isEmpty()||ageField.getText().isEmpty()){
                 // 提示信息
                 Label label = new Label("请填写完整信息！");
                 StackPane root = new StackPane();
@@ -115,6 +120,7 @@ public class SignUpStageController {
                 purchaser.setStudentIDOrWorkID(Integer.parseInt(idField.getText()));
                 purchaser.setGender(genderField.getText().charAt(0));
                 purchaser.setAvatarPath(avatarField.getText());
+                purchaser.setAge(Integer.parseInt(ageField.getText()));
                 SQLLoader sqlLoader = new SQLLoader();
                 try {
                     sqlLoader.connect();
@@ -151,7 +157,7 @@ public class SignUpStageController {
                 stage1.show();
             }
         });
-        vBox.getChildren().addAll(genderBox,new Label(),studentIDBox, new Label(),confirmButton);
+        vBox.getChildren().addAll(genderBox,new Label(),studentIDBox, new Label(),ageBox,new Label(),confirmButton);
     }
     public void drawSeller(){
         vBox.getChildren().clear();

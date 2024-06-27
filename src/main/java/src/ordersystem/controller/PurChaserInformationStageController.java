@@ -17,6 +17,8 @@ public class PurChaserInformationStageController {
     public Label genderLabel;
     @FXML
     public Label studentIdLabel;
+    @FXML
+    public Label ageLabel;
 
     @FXML
     public ImageView avatarImageView;
@@ -27,6 +29,7 @@ public class PurChaserInformationStageController {
         idLabel.setText(String.valueOf(purchaser.getId()));
         genderLabel.setText(String.valueOf(purchaser.getGender()));
         studentIdLabel.setText(String.valueOf(purchaser.getStudentIDOrWorkID()));
+        ageLabel.setText(String.valueOf(purchaser.getAge()));
         // TODO: 等数据库里面的用户插入头像之后再调用这个，现在还没有头像
 //        avatarImageView = new ImageView(new Image(seller.getAvatarPath()));
         avatarImageView.setImage(new Image("https://ordersystem-images.oss-cn-shanghai.aliyuncs.com/test.jpg"));

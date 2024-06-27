@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="288.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.PurChaserInformationStageController">
+<AnchorPane prefHeight="310.0" prefWidth="480.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="src.ordersystem.controller.PurChaserInformationStageController">
     <children>
         <Label fx:id="nameHeadLabel" layoutX="26.0" layoutY="26.0" text="用户名，">
             <font>
@@ -54,6 +54,16 @@
          </font>
       </Label>
       <Label layoutX="8.0" layoutY="221.0" text="学/工号：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="36.0" layoutY="260.0" text="年龄：">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label fx:id="ageLabel" layoutX="96.0" layoutY="260.0" prefHeight="30.0" prefWidth="293.0">
          <font>
             <Font size="20.0" />
          </font>

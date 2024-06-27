@@ -20,6 +20,8 @@ public class ManagePurchaserStageController {
     @FXML
     public TextField genderField;
     @FXML
+    public TextField ageField;
+    @FXML
     public TextField studentIDField;
     @FXML
     public Button deleteButton;
@@ -73,6 +75,11 @@ public class ManagePurchaserStageController {
         }else {
             purchaser1.setStudentIDOrWorkID(Integer.parseInt(studentIDField.getText()));
         }
+        if (ageField.getText().isEmpty()){
+            purchaser1.setAge(Integer.parseInt(ageField.getPromptText()));
+        }else{
+            purchaser1.setAge(Integer.parseInt(ageField.getText()));
+        }
         SQLLoader sqlLoader = new SQLLoader();
         sqlLoader.connect();
         sqlLoader.updatePurchaser(purchaser1);
@@ -93,5 +100,6 @@ public class ManagePurchaserStageController {
         nameField.setPromptText(purchaser.getName());
         genderField.setPromptText(String.valueOf(purchaser.getGender()));
         studentIDField.setPromptText(String.valueOf(purchaser.getStudentIDOrWorkID()));
+        ageField.setPromptText(String.valueOf(purchaser.getAge()));
     }
 }
