@@ -25,7 +25,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -839,19 +839,22 @@ public class SQLLoader {
     //根据用户的年龄和性别等信息，对用户群体进行特征分析
 
     public String analyzeUserGroup() throws SQLException {
+        StringBuilder sb = new StringBuilder();
         // 根据年龄段分析点餐习惯
-//        Map<String, Integer> ageGroupOrderHabits = getAgeGroupOrderHabits();
-//        System.out.println("Age Group Order Habits: \n" + ageGroupOrderHabits);
+        Map<String, Integer> ageGroupOrderHabits = getAgeGroupOrderHabits();
+        sb.append("Age Group Order Habits: \n");
+        ageGroupOrderHabits.forEach((k, v) -> sb.append(k + ": " + v + "次\n"));
 
         // 根据性别分析点餐习惯
         Map<String, Integer> genderOrderHabits = getGenderOrderHabits();
-        StringBuilder sb = new StringBuilder();
+
         sb.append("Gender Order Habits: \n");
         genderOrderHabits.forEach((k, v) -> sb.append(k + ": " + v + "次\n"));
 
         // 根据年龄段分析评价习惯
-//        Map<String, Integer> ageGroupReviewHabits = getAgeGroupReviewHabits();
-//        System.out.println("Age Group Review Habits: \n" + ageGroupReviewHabits);
+        Map<String, Integer> ageGroupReviewHabits = getAgeGroupReviewHabits();
+        sb.append("Age Group Review Habits: \n");
+        ageGroupReviewHabits.forEach((k, v) -> sb.append(k + ": " + v + "次\n"));
 
         // 根据性别分析评价习惯
         Map<String, Integer> genderReviewHabits = getGenderReviewHabits();
@@ -874,32 +877,32 @@ public class SQLLoader {
         }
         return sb.toString();
     }
-//    private Map<String, Integer> getAgeGroupOrderHabits() throws SQLException {
-//        Map<String, Integer> ageGroupOrderHabits = new HashMap<>();
-//
-//        String sql = "SELECT CASE " +
-//                "WHEN age < 18 THEN 'Under 18' " +
-//                "WHEN age BETWEEN 18 AND 25 THEN '18-25' " +
-//                "WHEN age BETWEEN 26 AND 40 THEN '26-40' " +
-//                "WHEN age BETWEEN 41 AND 60 THEN '41-60' " +
-//                "ELSE 'Above 60' END AS age_group, " +
-//                "COUNT(*) AS order_count " +
-//                "FROM purchaser c " +
-//                "JOIN orderOverview o ON c.id = o.purchaser_id " +
-//                "GROUP BY age_group";
-//
-//        try (Statement stmt = connect.createStatement()) {
-//            ResultSet rs = stmt.executeQuery(sql);
-//
-//            while (rs.next()) {
-//                String ageGroup = rs.getString("age_group");
-//                int orderCount = rs.getInt("order_count");
-//                ageGroupOrderHabits.put(ageGroup, orderCount);
-//            }
-//        }
-//
-//        return ageGroupOrderHabits;
-//    }
+    private Map<String, Integer> getAgeGroupOrderHabits() throws SQLException {
+        Map<String, Integer> ageGroupOrderHabits = new HashMap<>();
+
+        String sql = "SELECT CASE " +
+                "WHEN age < 18 THEN 'Under 18' " +
+                "WHEN age BETWEEN 18 AND 25 THEN '18-25' " +
+                "WHEN age BETWEEN 26 AND 40 THEN '26-40' " +
+                "WHEN age BETWEEN 41 AND 60 THEN '41-60' " +
+                "ELSE 'Above 60' END AS age_group, " +
+                "COUNT(*) AS order_count " +
+                "FROM purchaser c " +
+                "JOIN orderOverview o ON c.id = o.purchaser_id " +
+                "GROUP BY age_group";
+
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                String ageGroup = rs.getString("age_group");
+                int orderCount = rs.getInt("order_count");
+                ageGroupOrderHabits.put(ageGroup, orderCount);
+            }
+        }
+
+        return ageGroupOrderHabits;
+    }
     private Map<String, Integer> getGenderOrderHabits() throws SQLException {
         Map<String, Integer> genderOrderHabits = new HashMap<>();
 
@@ -920,34 +923,34 @@ public class SQLLoader {
 
         return genderOrderHabits;
     }
-//    private Map<String, Integer> getAgeGroupReviewHabits() throws SQLException {
-//        Map<String, Integer> ageGroupReviewHabits = new HashMap<>();
-//
-//        String sql = "SELECT CASE " +
-//                "WHEN age < 18 THEN 'Under 18' " +
-//                "WHEN age BETWEEN 18 AND 25 THEN '18-25' " +
-//                "WHEN age BETWEEN 26 AND 40 THEN '26-35' " +
-//                "WHEN age BETWEEN 41 AND 60 THEN '46-60' " +
-//                "ELSE 'Above 60' END AS age_group, " +
-//                "COUNT(*) AS review_count " +
-//                "FROM purchaser c " +
-//                "JOIN orderOverview r ON c.id = r.purchaser_id " +
-//                "JOIN order_dish o ON r.order_id = o.order_id "+
-//                "where o.mark != null "+
-//                "GROUP BY age_group";
-//
-//        try (Statement stmt = connect.createStatement()) {
-//            ResultSet rs = stmt.executeQuery(sql);
-//
-//            while (rs.next()) {
-//                String ageGroup = rs.getString("age_group");
-//                int reviewCount = rs.getInt("review_count");
-//                ageGroupReviewHabits.put(ageGroup, reviewCount);
-//            }
-//        }
-//
-//        return ageGroupReviewHabits;
-//    }
+    private Map<String, Integer> getAgeGroupReviewHabits() throws SQLException {
+        Map<String, Integer> ageGroupReviewHabits = new HashMap<>();
+
+        String sql = "SELECT CASE " +
+                "WHEN age < 18 THEN 'Under 18' " +
+                "WHEN age BETWEEN 18 AND 25 THEN '18-25' " +
+                "WHEN age BETWEEN 26 AND 40 THEN '26-35' " +
+                "WHEN age BETWEEN 41 AND 60 THEN '46-60' " +
+                "ELSE 'Above 60' END AS age_group, " +
+                "COUNT(*) AS review_count " +
+                "FROM purchaser c " +
+                "JOIN orderOverview r ON c.id = r.purchaser_id " +
+                "JOIN order_dish o ON r.order_id = o.order_id "+
+                "where o.mark != null "+
+                "GROUP BY age_group";
+
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql);
+
+            while (rs.next()) {
+                String ageGroup = rs.getString("age_group");
+                int reviewCount = rs.getInt("review_count");
+                ageGroupReviewHabits.put(ageGroup, reviewCount);
+            }
+        }
+
+        return ageGroupReviewHabits;
+    }
 
     private Map<String, Integer> getGenderReviewHabits() throws SQLException {
         Map<String, Integer> genderReviewHabits = new HashMap<>();

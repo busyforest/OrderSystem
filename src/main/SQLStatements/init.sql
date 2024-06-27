@@ -18,6 +18,7 @@ create table if not exists message(
 create table if not exists purchaser(
     id int,
     name varchar(20),
+    age int,
     gender varchar(1),
     studentIDOrWorkID int,
     foreign key (id) references User(id),
