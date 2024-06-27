@@ -219,7 +219,7 @@ public class SQLLoader {
         statement.executeUpdate("delete from purchaser where id="+id);
     }
     public void updatePurchaser(Purchaser purchaser) throws SQLException {
-        statement.executeUpdate("update purchaser set name = \""+purchaser.getName()+ "\" ,gender= \""+purchaser.getGender()+"\" ,studentIDOrWorkID = "+ purchaser.getStudentIDOrWorkID()+" where id ="+purchaser.getId());
+        statement.executeUpdate("update purchaser set name = \""+purchaser.getName()+ "\" ,gender= \""+purchaser.getGender()+"\" ,studentIDOrWorkID = "+ purchaser.getStudentIDOrWorkID()+", age = "+purchaser.getAge()+" where id ="+purchaser.getId());
     }
 
     //买家评论菜品
@@ -709,6 +709,7 @@ public class SQLLoader {
         }
         return newDishes;
     }
+
     //获取购买某个菜品最多的人
     public String getDishBuyer(int dishId) throws SQLException {
         String selectDishBuyer = "select purchaser_id, sum(quantity) as num from order_dish, orderOverview where order_dish.dish_id=" + dishId + " and orderOverview.order_id = order_dish.order_id group by purchaser_id order by num desc limit 1";
