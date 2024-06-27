@@ -25,7 +25,7 @@ public class SQLLoader {
         // 将 用户名和密码放入 Properties 对象中
         properties = new Properties();
         properties.setProperty("user", "root");  // 用户
-        properties.setProperty("password", "735568");  // 密码（填入自己用户名对应的密码）
+        properties.setProperty("password", "654321");  // 密码（填入自己用户名对应的密码）
         properties.put("allowMultiQueries", "true");  // 允许多条 SQL 语句执行
         // 根据给定的 url 连接数据库
         connect = driver.connect(url, properties);
@@ -861,6 +861,26 @@ public class SQLLoader {
         Map<String, Integer> ageGroupReviewHabits = getAgeGroupReviewHabits();
         sb.append("Age Group Review Habits: \n");
         ageGroupReviewHabits.forEach((k, v) -> sb.append(k + ": " + v + "次\n"));
+        String sql1 = "SELECT CASE " +
+                "WHEN age < 18 THEN 'Under 18' " +
+                "WHEN age BETWEEN 18 AND 25 THEN '18-25' " +
+                "WHEN age BETWEEN 26 AND 40 THEN '26-40' " +
+                "WHEN age BETWEEN 41 AND 60 THEN '41-60' " +
+                "ELSE 'Above 60' END AS age_group, " +
+                "COUNT(*) AS review_count " +
+                "FROM purchaser c " +
+                "JOIN orderOverview r ON c.id = r.purchaser_id " +
+                "JOIN order_dish o ON r.order_id = o.order_id "+
+                "where o.mark >=4 "+
+                "GROUP BY age_group";
+        try (Statement stmt = connect.createStatement()) {
+            ResultSet rs = stmt.executeQuery(sql1);
+            while (rs.next()) {
+                String ageGroup = rs.getString("age_group");
+                int reviewCount = rs.getInt("review_count");
+                sb.append(ageGroup + ": 好评（>=4分）次数" + reviewCount + "次\n");
+            }
+        }
 
         // 根据性别分析评价习惯
         Map<String, Integer> genderReviewHabits = getGenderReviewHabits();
@@ -935,14 +955,14 @@ public class SQLLoader {
         String sql = "SELECT CASE " +
                 "WHEN age < 18 THEN 'Under 18' " +
                 "WHEN age BETWEEN 18 AND 25 THEN '18-25' " +
-                "WHEN age BETWEEN 26 AND 40 THEN '26-35' " +
-                "WHEN age BETWEEN 41 AND 60 THEN '46-60' " +
+                "WHEN age BETWEEN 26 AND 40 THEN '26-40' " +
+                "WHEN age BETWEEN 41 AND 60 THEN '41-60' " +
                 "ELSE 'Above 60' END AS age_group, " +
                 "COUNT(*) AS review_count " +
                 "FROM purchaser c " +
                 "JOIN orderOverview r ON c.id = r.purchaser_id " +
                 "JOIN order_dish o ON r.order_id = o.order_id "+
-                "where o.mark != null "+
+                "where o.mark is not null "+
                 "GROUP BY age_group";
 
         try (Statement stmt = connect.createStatement()) {
