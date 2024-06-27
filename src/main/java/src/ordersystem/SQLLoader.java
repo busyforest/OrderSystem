@@ -326,6 +326,8 @@ public class SQLLoader {
                 dish.setNutritionInfo(resultSet1.getString("nutrition_information"));
                 dish.setPossibleAllergens(resultSet1.getString("possible_allergens"));
                 dish.setAvg_mark(resultSet1.getFloat("avg_mark"));
+                dish.setOnline_sales_volume(resultSet1.getInt("online_sales_volume"));
+                dish.setOffline_sales_volume(resultSet1.getInt("offline_sales_volume"));
                 dishes.add(dish);
             }
         }
@@ -533,6 +535,8 @@ public class SQLLoader {
                 dish.setNutritionInfo(resultSet1.getString("nutrition_information"));
                 dish.setPossibleAllergens(resultSet1.getString("possible_allergens"));
                 dish.setAvg_mark(resultSet1.getFloat("avg_mark"));
+                dish.setOnline_sales_volume(resultSet1.getInt("online_sales_volume"));
+                dish.setOffline_sales_volume(resultSet1.getInt("offline_sales_volume"));
                 dishes.add(dish);
             }
         }
