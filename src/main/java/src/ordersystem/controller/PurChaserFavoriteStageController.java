@@ -59,8 +59,12 @@ public class PurChaserFavoriteStageController {
 
         Label label2 = new Label("菜品简介：" + dishes.get(index).getDishDescription());
         label2.setFont(new javafx.scene.text.Font(15));
+
+        Label label3 = new Label("线上菜品销量："+dishes.get(index).getOnline_sales_volume());
+        Label label4 = new Label("线下菜品销量："+dishes.get(index).getOffline_sales_volume());
+
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(label1, label2);
+        vbox.getChildren().addAll(label1, label2, label3,   label4);
         hbox.getChildren().addAll(imageView, new Label(), vbox);
         hbox.setSpacing(10);
 

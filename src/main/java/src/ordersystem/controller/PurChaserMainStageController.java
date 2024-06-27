@@ -142,8 +142,10 @@ public class PurChaserMainStageController {
         Label label2 = new Label("简介：" + sellers.get(index).getBriefInfomation());
         label2.setFont(new javafx.scene.text.Font(15));
 
+        Label label = new Label("评分："+ sellers.get(index).getAvg_mark());
+
         VBox vbox = new VBox();
-        vbox.getChildren().addAll(label1, label2);
+        vbox.getChildren().addAll(label1, label2 ,label);
 
         hbox.getChildren().addAll(imageView, new Label(), vbox);
         hbox.setSpacing(10);
